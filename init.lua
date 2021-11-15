@@ -8,5 +8,7 @@ require('autopairs-config')
 require('keybindings')
 require('whichkey-config')
 require('telescope-config')
+require('colorizer-config')
+require('lsp')
 vim.cmd('colorscheme nord')
 
