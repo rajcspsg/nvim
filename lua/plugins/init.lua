@@ -50,4 +50,6 @@ return require('packer').startup(function()
     end
   }
 
+  use 'glepnir/dashboard-nvim'
+
 end)
