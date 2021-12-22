@@ -1,7 +1,9 @@
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-require'lspconfig/configs'.ls_emmet = {
+local lspconfig = require'lspconfig'
+
+lspconfig.ls_emmet = {
   default_config = {
     cmd = { 'ls_emmet', '--stdio' };
     filetypes = { 'html', 'css', 'scss' }; -- Add the languages you use, see language support
@@ -69,9 +71,12 @@ for _, server in ipairs(langservers) do
         },
       },
     }
-  else
-    require'lspconfig'[server].setup {
-      capabilities = capabilities
-    }
+  end
+end
+
+
+for _, server in ipairs(langservers) do
+  if server ~= 'sumneko_lua' then
+   require'lspconfig'[server].setup{ capabilities = capabilities }
   end
 end
