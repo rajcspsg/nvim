@@ -39,7 +39,9 @@ local langservers = {
   'tsserver',
   'pylsp',
   'emmet_ls',
-  'sumneko_lua'
+  'sumneko_lua',
+  'gopls',
+  'golangci_lint_ls'
 }
 
 for _, server in ipairs(langservers) do
