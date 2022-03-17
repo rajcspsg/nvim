@@ -10,5 +10,6 @@ require('whichkey-config')
 require('telescope-config')
 require('colorizer-config')
 require('lsp')
-vim.cmd('colorscheme nord')
-
+--require('ftplugin')
+vim.cmd('colorscheme catppuccin')
+-- vim.g.tokyonight_style = "night"

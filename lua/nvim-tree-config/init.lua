@@ -25,10 +25,13 @@ require('nvim-tree').setup({
     side = 'left',
     auto_resize = true,
     mappings = { custom_only = false, list = {}}
+  },
+  git = {
+    ignore = 1
   }
 })
 -- vim.g.nvim_tree_ignore = {'*.tmp', '.git'}
-vim.g.nvim_tree_gitignore = 1 
+--vim.g.nvim_tree_gitignore = 1 
 -- vim.g.nvim_tree_auto_close = 1
 vim.g.nvim_tree_indent_markers = 1
 

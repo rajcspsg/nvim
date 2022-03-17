@@ -2,6 +2,13 @@ return require('packer').startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
   use 'shaunsingh/nord.nvim'
+  use 'folke/tokyonight.nvim'
+  use 'tiagovla/tokyodark.nvim'
+  use "rebelot/kanagawa.nvim"
+  use({
+	"catppuccin/nvim",
+	as = "catppuccin"
+})
   use {'nvim-treesitter/nvim-treesitter', run = ":TSUpdate"}
   use {
     'nvim-lualine/lualine.nvim',
@@ -32,8 +39,8 @@ return require('packer').startup(function()
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/nvim-cmp'
-  use 'hrsh7th/cmp-vsnip'
-  use 'hrsh7th/vim-vsnip'
+  -- use 'hrsh7th/cmp-vsnip'
+  -- use 'hrsh7th/vim-vsnip'
 
   use 'norcalli/nvim-colorizer.lua'
 
@@ -51,5 +58,7 @@ return require('packer').startup(function()
   }
 
   use 'glepnir/dashboard-nvim'
+  use 'mfussenegger/nvim-jdtls'
 
+  use({'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }})
 end)
