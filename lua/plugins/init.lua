@@ -61,4 +61,8 @@ return require('packer').startup(function()
   use 'mfussenegger/nvim-jdtls'
 
   use({'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }})
+  use( {
+    'neovim/nvim-lspconfig',
+    'williamboman/nvim-lsp-installer',
+  })
 end)
