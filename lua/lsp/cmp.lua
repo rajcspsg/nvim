@@ -25,7 +25,13 @@ cmp.setup({
     end,
   },
   mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<Tab>'] = cmp.mapping.select_next_item(),
+    ['<C-S-f>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-e>'] = cmp.mapping.close(),
@@ -51,10 +57,11 @@ cmp.setup({
     end, { "i", "s" }),
   },
   sources = {
-    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp' , keyword_length = 3},
 
     -- For vsnip user.
-    { name = 'vsnip' },
+    { name = 'vsnip' , keyword_length = 2 },
+    { name = 'nvim_lua' , keyword_length = 2 },
 
     -- For luasnip user.
     -- { name = 'luasnip' },
@@ -62,10 +69,17 @@ cmp.setup({
     -- For ultisnips user.
     -- { name = 'ultisnips' },
 
-    { name = 'buffer' },
+    { name = 'buffer' , keyword_length = 2 },
+    { name = 'path' },
+    { name = 'nvim_lsp_signature_help'},
+    { name = 'calc'},
   },
   formatting = {
     format = lspkind.cmp_format({with_text = true, maxwidth = 50})
+  },
+  window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
   }
 })
 

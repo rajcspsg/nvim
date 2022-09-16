@@ -3,12 +3,12 @@ require('nvim-tree').setup({
   hijack_netrw = true,
   open_on_setup = true,
   ignore_ft_on_setup = {'dashboard'},
-  auto_close = 1,
-  auto_open = 1,
-  update_to_buf_dir   = {
-    enable = true,
-    auto_open = true,
-  },
+--  auto_close = 1,
+--  auto_open = 1,
+--  update_to_buf_dir   = {
+--    enable = true,
+--    auto_open = true,
+--  },
   open_on_tab = false,
     hijack_cursor = true,
     update_cwd = true,
@@ -23,16 +23,22 @@ require('nvim-tree').setup({
     width = 25,
 --    hide_root_folder = true,
     side = 'left',
-    auto_resize = true,
+--    auto_resize = true,
+
     mappings = { custom_only = false, list = {}}
   },
   git = {
-    ignore = 1
+    ignore = true
+  },
+  renderer = {
+    indent_markers = {
+      enable = true
+    } 
   }
 })
 -- vim.g.nvim_tree_ignore = {'*.tmp', '.git'}
 --vim.g.nvim_tree_gitignore = 1 
 -- vim.g.nvim_tree_auto_close = 1
-vim.g.nvim_tree_indent_markers = 1
+--vim.g.nvim_tree_indent_markers = 1
 
 vim.cmd('nnoremap <space>e :NvimTreeToggle<CR>')

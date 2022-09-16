@@ -6,9 +6,10 @@ return require('packer').startup(function()
   use 'tiagovla/tokyodark.nvim'
   use "rebelot/kanagawa.nvim"
   use({
-	"catppuccin/nvim",
-	as = "catppuccin"
-})
+  	"catppuccin/nvim",
+	  as = "catppuccin"
+  })
+
   use {'nvim-treesitter/nvim-treesitter', run = ":TSUpdate"}
   use {
     'nvim-lualine/lualine.nvim',
@@ -39,22 +40,35 @@ return require('packer').startup(function()
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/nvim-cmp'
+  use 'hrsh7th/cmp-nvim-lsp'
+  --use 'hrsh7th/cmp-nvim-lua'
+  --use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'hrsh7th/cmp-vsnip'
   use 'hrsh7th/vim-vsnip'
 
   use 'norcalli/nvim-colorizer.lua'
-
+  use {
+      'p00f/cphelper.nvim'
+   }
+  use 'puremourning/vimspector'
+  use 'voldikss/vim-floaterm'
   use {
     'lewis6991/gitsigns.nvim',
     requires = {
       'nvim-lua/plenary.nvim'
     },
-    -- tag = 'release' -- To use the latest release
+   -- tag = 'release' -- To use the latest release
     config = function()
       require('gitsigns').setup{
           current_line_blame = true,
       }
     end
+  }
+  use {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+    "neovim/nvim-lspconfig",
+    "simrat39/rust-tools.nvim"
   }
 
   use 'glepnir/dashboard-nvim'
@@ -63,6 +77,5 @@ return require('packer').startup(function()
   use({'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }})
   use( {
     'neovim/nvim-lspconfig',
-    'williamboman/nvim-lsp-installer',
   })
 end)

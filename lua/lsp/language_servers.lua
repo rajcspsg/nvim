@@ -34,14 +34,26 @@ table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
 local langservers = {
-  'html',
+  'clangd',
+  'clojure_lsp',
+  'cmake',
   'cssls',
-  'tsserver',
-  'pylsp',
+  'elixirls',
   'emmet_ls',
-  'sumneko_lua',
+  'golangci_lint_ls',
   'gopls',
-  'golangci_lint_ls'
+  'gradle_ls',
+  'hls',
+  'html',
+  'jdtls',
+  'kotlin_language_server',
+  'metals',
+  'ocamlls',
+  'pylsp',
+  'sumneko_lua',
+  'tsserver',
+  'vls',
+  'zls'
 }
 
 for _, server in ipairs(langservers) do
@@ -83,6 +95,21 @@ for _, server in ipairs(langservers) do
   end
 end
 
+require('lspconfig').rust_analyzer.setup({
+    capabilities=capabilities,
+    -- on_attach is a callback called when the language server attachs to the buffer
+    -- on_attach = on_attach,
+    settings = {
+      -- to enable rust-analyzer settings visit:
+      -- https://github.com/rust-analyzer/rust-analyzer/blob/master/docs/user/generated_config.adoc
+      ["rust-analyzer"] = {
+        -- enable clippy diagnostics on save
+        checkOnSave = {
+          command = "clippy"
+        },
+      }
+    }
+})
 local cmd = vim.cmd
 -- LSP
 cmd([[augroup lsp]])
