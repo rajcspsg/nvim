@@ -64,6 +64,9 @@ return require('packer').startup(function()
       }
     end
   }
+  use 'erietz/vim-terminator'
+  use {"is0n/jaq-nvim"}
+  use { 'CRAG666/code_runner.nvim', requires = 'nvim-lua/plenary.nvim' }
   use {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
