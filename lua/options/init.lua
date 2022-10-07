@@ -36,7 +36,7 @@ vim.o.expandtab = true
 vim.bo.expandtab = true
 vim.wo.foldmethod = 'expr'
 vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.opt_global.shortmess:remove("F"):append("c")
+--vim.opt_global.shortmess:remove("F"):append("c")
 vim.opt_global.completeopt = { "menu", "menuone", "noinsert", "noselect" }
 vim.api.nvim_set_option('updatetime', 300)
 vim.cmd([[

@@ -76,7 +76,8 @@ return require('packer').startup(function()
 
   use 'glepnir/dashboard-nvim'
   use 'mfussenegger/nvim-jdtls'
-
+use 'ray-x/go.nvim'
+use 'ray-x/guihua.lua' -- recommanded if need floating window support
   use({'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }})
   use( {
     'neovim/nvim-lspconfig',

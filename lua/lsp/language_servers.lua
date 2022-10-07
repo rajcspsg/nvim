@@ -146,7 +146,6 @@ metals_config.capabilities = require("cmp_nvim_lsp").update_capabilities(capabil
 
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
-
 dap.configurations.scala = {
   {
     type = "scala",
@@ -173,3 +172,6 @@ end
 
 -- If you want a :Format command this is useful
 cmd([[command! Format lua vim.lsp.buf.formatting()]])
+
+require('go').setup()
+
