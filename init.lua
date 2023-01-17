@@ -12,5 +12,8 @@ require('colorizer-config')
 require('lsp')
 --require('ftplugin')
 require('mason-lspconfig')
+require('jaq-nvim-config')
+require('code-runner-config')
+require('vim-terminator-config')
 vim.cmd('colorscheme catppuccin')
 -- vim.g.tokyonight_style = "night"
