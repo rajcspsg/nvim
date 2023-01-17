@@ -34,5 +34,18 @@ vim.o.autoindent = true
 vim.bo.autoindent = true
 vim.o.expandtab = true
 vim.bo.expandtab = true
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.opt_global.shortmess:remove("F"):append("c")
-vim.opt_global.completeopt = { "menu", "noinsert", "noselect" }
+vim.opt_global.completeopt = { "menu", "menuone", "noinsert", "noselect" }
+vim.api.nvim_set_option('updatetime', 300)
+vim.cmd([[
+set signcolumn=yes
+autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
+]])
+-- Vimspector options
+vim.cmd([[
+let g:vimspector_sidebar_width = 85
+let g:vimspector_bottombar_height = 15
+let g:vimspector_terminal_maxwidth = 70
+]])
