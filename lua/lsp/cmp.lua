@@ -71,8 +71,9 @@ cmp.setup({
 
     { name = 'buffer' , keyword_length = 2 },
     { name = 'path' },
-    { name = 'nvim_lsp_signature_help'},
-    { name = 'calc'},
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'calc' },
+    { name = 'conjure' }
   },
   formatting = {
     format = lspkind.cmp_format({with_text = true, maxwidth = 50})
@@ -84,7 +85,7 @@ cmp.setup({
 })
 
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 require('lspconfig').html.setup {
   capabilities = capabilities
