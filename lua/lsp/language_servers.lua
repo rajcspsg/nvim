@@ -1,5 +1,5 @@
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 local lspconfig = require'lspconfig'
 
@@ -142,7 +142,7 @@ metals_config.settings = {
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
@@ -173,5 +173,4 @@ end
 -- If you want a :Format command this is useful
 cmd([[command! Format lua vim.lsp.buf.formatting()]])
 
-require('go').setup()
 
