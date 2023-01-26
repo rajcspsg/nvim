@@ -1,4 +1,5 @@
 vim.g.mapleader = ' '
+vim.g.sexp_filetypes="clojure,scheme,lisp,racket,fennel,janet"
 local map = vim.api.nvim_set_keymap
 map('n', '<C-h>', '<C-w>h', {noremap = true, silent =false})
 map('n', '<C-l>', '<C-w>l', {noremap = true, silent =false})
@@ -55,7 +56,7 @@ map('n', "Dw", ":call vimspector#AddWatch()<cr>", {})
 map('n', "De", ":call vimspector#Evaluate()<cr>", {})
 map('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 fish <CR> ", {})
 map('n', "t", ":FloatermToggle myfloat<CR>", {})
-map('t', "<Esc>", "<C-\\><C-n>:q<CR>", {}) 
+map('t', "<Esc>", "<C-\\><C-n>:q<CR>", {})
 
 map('n', '<leader>R', ':RunCode<CR>', { noremap = true, silent = false })
 map('n', '<leader>Rf', ':RunFile<CR>', { noremap = true, silent = false })

@@ -15,7 +15,8 @@ return require('packer').startup(function()
     'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
   }
---  use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons'}
+  use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
+
   use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
@@ -23,7 +24,6 @@ return require('packer').startup(function()
   }
 
   --use {'windwp/nvim-ts-autotag'}
-  --use {'p00f/nvim-ts-rainbow'}
   use {'windwp/nvim-autopairs'}
 
   use {'folke/which-key.nvim'}
@@ -34,14 +34,11 @@ return require('packer').startup(function()
   }
 
   use 'onsails/lspkind-nvim'
-  use 'neovim/nvim-lspconfig'
-  use 'hrsh7th/cmp-nvim-lsp'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
-  --use 'hrsh7th/cmp-nvim-lua'
   --use 'hrsh7th/cmp-nvim-lsp-signature-help'
   use 'hrsh7th/cmp-vsnip'
   use 'hrsh7th/vim-vsnip'
@@ -79,10 +76,17 @@ return require('packer').startup(function()
   -- use 'ray-x/go.nvim'
   -- use 'ray-x/guihua.lua' -- recommanded if need floating window support
   use({'scalameta/nvim-metals', requires = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }})
-  -- use( {
-  --  'neovim/nvim-lspconfig',
-  -- })
   use 'gpanders/nvim-parinfer'
   use 'Olical/conjure'
   use 'PaterJason/cmp-conjure'
+  use 'Olical/aniseed'
+  use {
+    'guns/vim-sexp',
+    requires = {
+      "radenling/vim-dispatch-neovim",
+      "tpope/vim-sexp-mappings-for-regular-people",
+      "tpope/vim-repeat"
+    },
+
+  }
 end)
