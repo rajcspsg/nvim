@@ -1,6 +1,6 @@
 local M = {
   "Olical/conjure",
-  lazy = true,
+  lazy = false,
   branch = "develop",
   ft = { "clojure", "lua" }
 }

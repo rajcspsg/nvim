@@ -89,4 +89,11 @@ return require('packer').startup(function()
     },
 
   }
+
+  use {
+    'tpope/vim-dispatch',
+    'clojure-vim/vim-jack-in',
+    'radenling/vim-dispatch-neovim'
+  }
+
 end)
