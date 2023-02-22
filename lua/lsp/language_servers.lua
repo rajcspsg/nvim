@@ -14,20 +14,6 @@ lspconfig.ls_emmet = {
   };
 }
 
-local system_name
-if vim.fn.has("mac") == 1 then
-  system_name = "macOS"
-elseif vim.fn.has("unix") == 1 then
-  system_name = "Linux"
-elseif vim.fn.has('win32') == 1 then
-  system_name = "Windows"
-else
-  print("Unsupported system for sumneko")
-end
-
--- set the path to the sumneko installation; if you previously installed via the now deprecated :LspInstall, use
-local sumneko_root_path = '/home/rajkumar/Coding/nvim/lua-language-server'
-local sumneko_binary = sumneko_root_path.."/bin/"..system_name.."/lua-language-server"
 
 local runtime_path = vim.split(package.path, ';')
 table.insert(runtime_path, "lua/?.lua")
@@ -47,27 +33,24 @@ local langservers = {
   'html',
   'jdtls',
   'kotlin_language_server',
+  'lua_ls',
   'metals',
   'ocamlls',
   'pylsp',
-  'sumneko_lua',
   'tsserver',
   'vls',
   'zls'
 }
 
 for _, server in ipairs(langservers) do
-  if server == 'sumneko_lua' then
+   if server == 'lua_ls' then
     capabilities.textDocument.completion.completionItem.snippetSupport = true
     require'lspconfig'[server].setup {
-      cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"};
       settings = {
         Lua = {
           runtime = {
             -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
             version = 'LuaJIT',
-            -- Setup your lua path
-            path = runtime_path,
           },
           diagnostics = {
             -- Get the language server to recognize the `vim` global
@@ -83,14 +66,14 @@ for _, server in ipairs(langservers) do
             enable = false,
           },
         },
-      },
+      }, 
     }
   end
 end
 
 
 for _, server in ipairs(langservers) do
-  if server ~= 'sumneko_lua' then
+  if server ~= 'lua_ls' then
    require'lspconfig'[server].setup{ capabilities = capabilities }
   end
 end
@@ -130,7 +113,6 @@ metals_config = require("metals").bare_config()
 metals_config.settings = {
   showImplicitArguments = true,
   excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
-  serverVersion = "0.10.9+133-9aae968a-SNAPSHOT",
 }
 
 -- *READ THIS*
@@ -169,6 +151,19 @@ dap.configurations.scala = {
 metals_config.on_attach = function(client, bufnr)
   require("metals").setup_dap()
 end
+
+-- Autocmd that will actually be in charging of starting the whole thing
+local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
+vim.api.nvim_create_autocmd("FileType", {
+  -- NOTE: You may or may not want java included here. You will need it if you
+  -- want basic Java support but it may also conflict if you are using
+  -- something like nvim-jdtls which also works on a java filetype autocmd.
+  pattern = { "scala", "sbt" },
+  callback = function()
+    require("metals").initialize_or_attach(metals_config)
+  end,
+  group = nvim_metals_group,
+})
 
 -- If you want a :Format command this is useful
 cmd([[command! Format lua vim.lsp.buf.formatting()]])
