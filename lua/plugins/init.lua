@@ -96,4 +96,5 @@ return require('packer').startup(function()
     'radenling/vim-dispatch-neovim'
   }
 
+  use 'echasnovski/mini.nvim'
 end)

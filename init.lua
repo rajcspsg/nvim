@@ -5,7 +5,6 @@ require('bufferline-config')
 require('nvim-tree-config')
 --require('treesitter-config')
 require('autopairs-config')
-require('keybindings')
 require('whichkey-config')
 require('telescope-config')
 require('colorizer-config')
@@ -15,6 +14,7 @@ require('mason-lspconfig')
 require('jaq-nvim-config')
 require('code-runner-config')
 require('vim-terminator-config')
+require('keybindings')
 vim.cmd('colorscheme tokyonight')
 -- vim.g.tokyonight_style = "night"
-vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet"
+vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"

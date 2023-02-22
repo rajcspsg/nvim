@@ -1,7 +1,7 @@
 require('nvim-tree').setup({
   disable_netrw = true,
   hijack_netrw = true,
-  open_on_setup = true,
+  --open_on_setup = true,
   ignore_ft_on_setup = {'dashboard'},
 --  auto_close = 1,
 --  auto_open = 1,
@@ -42,3 +42,9 @@ require('nvim-tree').setup({
 --vim.g.nvim_tree_indent_markers = 1
 
 vim.cmd('nnoremap <space>e :NvimTreeToggle<CR>')
+
+local function open_nvim_tree()
+  -- open the tree
+  require("nvim-tree.api").tree.open()
+end
+vim.api.nvim_create_autocmd({ "VimEnter" }, { callback = open_nvim_tree })
