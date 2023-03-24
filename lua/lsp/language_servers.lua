@@ -78,6 +78,21 @@ for _, server in ipairs(langservers) do
   end
 end
 
+-- Configure ElixirLS as the LSP server for Elixir.
+require'lspconfig'.elixirls.setup{
+  -- cmd = { "/opt/homebrew/Cellar/elixir-ls/0.13.0/bin/elixir-ls" },
+  cmd = { "elixir-ls" },
+  -- on_attach = custom_attach, -- this may be required for extended functionalities of the LSP
+  capabilities = capabilities,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  elixirLS = {
+    dialyzerEnabled = false,
+    fetchDeps = false,
+  };
+}
+
 require('lspconfig').rust_analyzer.setup({
     capabilities=capabilities,
     -- on_attach is a callback called when the language server attachs to the buffer
