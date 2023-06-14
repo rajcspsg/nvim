@@ -97,4 +97,35 @@ return require('packer').startup(function()
   }
 
   use 'echasnovski/mini.nvim'
+  use {
+    'mrcjkb/haskell-tools.nvim'
+  }
+
+  -- Using packer
+  use({
+    "LeonHeidelbach/trailblazer.nvim",
+    config = function()
+        require("trailblazer").setup({
+            -- your custom config goes here
+        })
+    end,
+  })
+
+  -- Using packer
+  use({
+    "LeonHeidelbach/trailblazer.nvim",
+    config = function()
+        require("trailblazer").setup({
+            -- your custom config goes here
+        })
+    end,
+  })
+
+  use {
+  'boltlessengineer/bufterm.nvim',
+  config = function()
+    require('bufterm').setup()
+  end,
+ }
+
 end)

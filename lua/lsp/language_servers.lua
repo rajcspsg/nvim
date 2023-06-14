@@ -14,11 +14,6 @@ lspconfig.ls_emmet = {
   };
 }
 
-
-local runtime_path = vim.split(package.path, ';')
-table.insert(runtime_path, "lua/?.lua")
-table.insert(runtime_path, "lua/?/init.lua")
-
 local langservers = {
   'clangd',
   'clojure_lsp',
@@ -37,45 +32,15 @@ local langservers = {
   'metals',
   'ocamlls',
   'pylsp',
+  'lua_ls',
   'tsserver',
   'vls',
   'zls'
 }
 
-for _, server in ipairs(langservers) do
-   if server == 'lua_ls' then
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-    require'lspconfig'[server].setup {
-      settings = {
-        Lua = {
-          runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
-          },
-          diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = {'vim'},
-          },
-          workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = vim.api.nvim_get_runtime_file("", true),
-            checkThirdParty = false
-          },
-          -- Do not send telemetry data containing a randomized but unique identifier
-          telemetry = {
-            enable = false,
-          },
-        },
-      }, 
-    }
-  end
-end
-
 
 for _, server in ipairs(langservers) do
-  if server ~= 'lua_ls' then
-   require'lspconfig'[server].setup{ capabilities = capabilities }
-  end
+ require'lspconfig'[server].setup{ capabilities = capabilities }
 end
 
 -- Configure ElixirLS as the LSP server for Elixir.
