@@ -1,6 +1,7 @@
 return require('packer').startup(function()
   -- Packer can manage itself
   use 'wbthomason/packer.nvim'
+  use 'nvim-tree/nvim-web-devicons'
   use 'shaunsingh/nord.nvim'
   use 'folke/tokyonight.nvim'
   use 'tiagovla/tokyodark.nvim'
@@ -10,6 +11,7 @@ return require('packer').startup(function()
 	  as = "catppuccin"
   })
 
+  use 'nvim-tree/nvim-web-devicons'
   -- use {'nvim-treesitter/nvim-treesitter', run = ":TSUpdate"}
   use {
     'nvim-lualine/lualine.nvim',
@@ -47,7 +49,7 @@ return require('packer').startup(function()
   use {
       'p00f/cphelper.nvim'
    }
-  use 'puremourning/vimspector'
+--  use 'puremourning/vimspector'
   use 'voldikss/vim-floaterm'
   use {
     'lewis6991/gitsigns.nvim',

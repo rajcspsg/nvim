@@ -1,4 +1,5 @@
 vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 vim.g.sexp_filetypes="clojure,scheme,lisp,racket,fennel,janet"
 local map = vim.api.nvim_set_keymap
 map('n', '<C-h>', '<C-w>h', {noremap = true, silent =false})

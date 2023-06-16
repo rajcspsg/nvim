@@ -13,8 +13,9 @@ require('lsp')
 require('mason-lspconfig')
 require('jaq-nvim-config')
 require('code-runner-config')
-require('vim-terminator-config')
+--require('vim-terminator-config')
 require('keybindings')
+require('devicons')
 vim.cmd('colorscheme tokyonight')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"
