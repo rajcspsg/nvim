@@ -54,4 +54,5 @@ let g:vimspector_terminal_maxwidth = 70
 vim.cmd([[
 let g:parinfer_force_balance = v:true
 let g:parinfer_filetypes = ['clojure', 'scheme', 'lisp', 'racket', 'fennel']
+let g:parinfer_comment_chars = ';;'
 ]])
