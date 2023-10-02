@@ -5,6 +5,7 @@ vim.o.whichwrap = 'b,s,<,>,[,],h,l'
 vim.o.pumheight = 10
 vim.o.fileencoding = 'utf-8'
 vim.o.cmdheight = 2
+--vim.opt.modifyable= 'on'
 vim.o.splitbelow = true
 vim.o.splitright = true
 vim.opt.termguicolors = true
