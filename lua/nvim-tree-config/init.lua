@@ -25,7 +25,7 @@ require('nvim-tree').setup({
     side = 'left',
 --    auto_resize = true,
 
-    mappings = { custom_only = false, list = {}}
+--    mappings = { custom_only = false, list = {}}
   },
   git = {
     ignore = true

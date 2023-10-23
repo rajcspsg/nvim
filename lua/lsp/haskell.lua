@@ -1,6 +1,5 @@
 local ht = require('haskell-tools')
 local def_opts = { noremap = true, silent = true, }
-ht.setup {
   hls = {
     on_attach = function(client, bufnr)
       local opts = vim.tbl_extend('keep', def_opts, { buffer = bufnr, })
@@ -10,7 +9,6 @@ ht.setup {
       vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, opts)
     end,
   },
-}
 -- Suggested keymaps that do not depend on haskell-language-server
 -- Toggle a GHCi repl for the current package
 vim.keymap.set('n', '<leader>rr', ht.repl.toggle, def_opts)
