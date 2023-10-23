@@ -12,10 +12,10 @@ local config = {
     '--add-modules=ALL-SYSTEM',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
     '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-    '-jar', '~/Installed/jdt-language-server-1.9.0/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
-    '-coniguration', '~/Installed/jdt-language-server-1.9.0/config_linux',
+--    '-jar', '~/Installed/jdt-language-server-1.9.0/plugins/org.eclipse.equinox.launcher_1.6.400.v20210924-0641.jar',
+--    '-coniguration', '~/Installed/jdt-language-server-1.9.0/config_linux',
     --    '-data', '~/Coding/java',
-    '-data', vim.fn.expand('~/.cache/jdtls-workspace') .. workspace_dir,
+ --   '-data', vim.fn.expand('~/.cache/jdtls-workspace') .. workspace_dir,
   },
 
   root_dir = require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew', 'java', 'pom.xml'}),
