@@ -4,29 +4,23 @@ local plugins = {
   'wbthomason/packer.nvim',
   'nvim-tree/nvim-web-devicons',
   'shaunsingh/nord.nvim',
-  'folke/tokyonight.nvim',
-  'tiagovla/tokyodark.nvim',
-  'rebelot/kanagawa.nvim',
+  { "AstroNvim/astrotheme" },
   {
-  	"catppuccin/nvim",
-	  as = "catppuccin"
+    "AstroNvim/astroui",
+    lazy = false, -- disable lazy loading
+    priority = 10000, -- load AstroUI first
+    opts = {
+      -- set configuration options  as described below
+    }
   },
 
   'nvim-tree/nvim-web-devicons',
-  -- use {'nvim-treesitter/nvim-treesitter', run = ":TSUpdate"}
-  {
-    'nvim-lualine/lualine.nvim',
-    dependenciess = {'kyazdani42/nvim-web-devicons', opt = true}
-  },
-  {'akinsho/bufferline.nvim', tag = "*", dependenciess = 'nvim-tree/nvim-web-devicons'},
-
   {
     'kyazdani42/nvim-tree.lua',
     dependenciess = 'kyazdani42/nvim-web-devicons',
     config = function()require'nvim-tree'.setup {} end
   },
 
-  --use {'windwp/nvim-ts-autotag'}
   {'windwp/nvim-autopairs'},
 
   {'folke/which-key.nvim'},
@@ -42,7 +36,6 @@ local plugins = {
   'hrsh7th/cmp-cmdline',
   'hrsh7th/nvim-cmp',
   'hrsh7th/cmp-nvim-lsp',
-  --use 'hrsh7th/cmp-nvim-lsp-signature-help'
   'hrsh7th/cmp-vsnip',
   'hrsh7th/vim-vsnip',
 
@@ -50,14 +43,12 @@ local plugins = {
   {
       'p00f/cphelper.nvim'
    },
---  use 'puremourning/vimspector'
   'voldikss/vim-floaterm',
   {
     'lewis6991/gitsigns.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim'
     },
-   -- tag = 'release' -- To use the latest release
     config = function()
       require('gitsigns').setup{
           current_line_blame = true,
@@ -76,8 +67,6 @@ local plugins = {
 
   'glepnir/dashboard-nvim',
   'mfussenegger/nvim-jdtls',
-  -- use 'ray-x/go.nvim'
-  -- use 'ray-x/guihua.lua' -- recommanded if need floating window support
   {'scalameta/nvim-metals', dependenciess = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }},
   'mfussenegger/nvim-dap',
   'gpanders/nvim-parinfer',
@@ -91,46 +80,36 @@ local plugins = {
       "tpope/vim-sexp-mappings-for-regular-people",
       "tpope/vim-repeat"
     },
-
   },
-
   {
     'tpope/vim-dispatch',
     'clojure-vim/vim-jack-in',
     'radenling/vim-dispatch-neovim'
   },
-
   'echasnovski/mini.nvim',
   {
     'mrcjkb/haskell-tools.nvim'
   },
-
-  -- Using packer
-  ({
-    "LeonHeidelbach/trailblazer.nvim",
-    config = function()
-        requires("trailblazer").setup({
-            -- your custom config goes here
-        })
-    end,
-  }),
-
-  -- Using packer
-  ({
-    "LeonHeidelbach/trailblazer.nvim",
-    config = function()
-        require("trailblazer").setup({
-            -- your custom config goes here
-        })
-    end,
-  }),
 
   {
   'boltlessengineer/bufterm.nvim',
   config = function()
     require('bufterm').setup()
   end,
- }
+ },
+  {
+  "NeogitOrg/neogit",
+  dependencies = {
+    "nvim-lua/plenary.nvim",         -- required
+    "sindrets/diffview.nvim",        -- optional - Diff integration
+
+    -- Only one of these is needed, not both.
+    "nvim-telescope/telescope.nvim", -- optional
+    "ibhagwan/fzf-lua",              -- optional
+  },
+  config = true
+}
+
 }
 
 local opts = {}
