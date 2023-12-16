@@ -108,8 +108,9 @@ local plugins = {
     "ibhagwan/fzf-lua",              -- optional
   },
   config = true
-}
-
+},
+{'akinsho/git-conflict.nvim', version = "*", config = true},
+{'nvim-treesitter/nvim-treesitter'}
 }
 
 local opts = {}
