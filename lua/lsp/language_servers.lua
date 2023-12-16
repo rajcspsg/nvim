@@ -81,7 +81,7 @@ cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
 -- NOTE: You may or may not want java included here. You will need it if you want basic Java support
 -- but it may also conflict if you are using something like nvim-jdtls which also works on a java filetype
 -- autocmd.
-cmd([[autocmd FileType java,scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
+cmd([[autocmd FileType scala,sbt lua require("metals").initialize_or_attach(metals_config)]])
 cmd([[augroup end]])
 
 ----------------------------------
