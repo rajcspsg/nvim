@@ -1,2 +1,3 @@
-require('git-config.neogit')
-require('git-config/diff-view')
+require('git-config/neogit')
+require('git-config/diffview')
+require('git-config/git-conflict')
