@@ -42,7 +42,7 @@ require("astrotheme").setup({
       },
       syntax = {
         cyan = "#800010", -- Overrides astrodarks cyan syntax color
-        comments = "#CC83E3"  -- Overrides astrodarks comment color.
+        comments = "#fffacd"  -- Overrides astrodarks comment color.
       },
       my_color = "#000000" -- Overrides global.my_color
     },

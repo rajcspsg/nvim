@@ -32,6 +32,6 @@ require('keybindings')
 require('devicons')
 require('git-config')
 vim.cmd('colorscheme astrodark') -- " Dark theme (default)
---vim.cmd('colorscheme astrodark')
+vim.cmd('set nofoldenable')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"
