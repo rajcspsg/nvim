@@ -5,14 +5,14 @@ local plugins = {
   'nvim-tree/nvim-web-devicons',
   'shaunsingh/nord.nvim',
   { "AstroNvim/astrotheme" },
-  {
+ --[=====[ {
     "AstroNvim/astroui",
     lazy = false, -- disable lazy loading
     priority = 10000, -- load AstroUI first
     opts = {
       -- set configuration options  as described below
     }
-  },
+  },--]=====]
 
   'nvim-tree/nvim-web-devicons',
   {
@@ -110,7 +110,23 @@ local plugins = {
   config = true
 },
 {'akinsho/git-conflict.nvim', version = "*", config = true},
-{'nvim-treesitter/nvim-treesitter'}
+{"nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    event = { 'BufReadPre', 'BufNewFile' },
+    cmd = {'TSInstall', 'TSBufEnable', 'TSBufDisable', 'TSModuleInfo'},
+    dependencies = {
+      'nvim-treesitter/playground',
+      'nvim-treesitter/nvim-treesitter-context',
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    }
+},
+{
+    'nvim-treesitter/playground',
+    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+    },
+},
 }
 
 local opts = {}
