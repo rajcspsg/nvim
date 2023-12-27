@@ -68,7 +68,32 @@ local plugins = {
   'glepnir/dashboard-nvim',
   'mfussenegger/nvim-jdtls',
   {'scalameta/nvim-metals', dependenciess = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap", }},
-  'mfussenegger/nvim-dap',
+  {
+    'mfussenegger/nvim-dap',
+    init = function()
+      require("core.utils").load_mappings("dap")
+    end
+  },
+  {
+    'leoluz/nvim-dap-go',
+    ft = "go",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function (_, opts)
+      require("dap-go").setup(opts)
+      require("core.utils").load_mappings("dap_go")
+    end
+  },
+  {
+    "olexsmir/gopher.nvim",
+    ft = "go",
+    config = function(_, opts)
+      require("gopher").setup(opts)
+      require("core.utils").load_mappings("gopher")
+    end,
+    build = function ()
+      vim.cmd [[silent! GoInstallDeps]]
+    end
+  },
   'gpanders/nvim-parinfer',
   'Olical/conjure',
   'PaterJason/cmp-conjure',
@@ -120,13 +145,7 @@ local plugins = {
       'nvim-treesitter/nvim-treesitter-textobjects',
     }
 },
-{
-    'nvim-treesitter/playground',
-    event = { 'BufReadPre', 'BufNewFile' },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter',
-    },
-},
+"jose-elias-alvarez/null-ls.nvim"
 }
 
 local opts = {}
