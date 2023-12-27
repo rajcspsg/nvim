@@ -35,3 +35,5 @@ vim.cmd('colorscheme astrodark') -- " Dark theme (default)
 vim.cmd('set nofoldenable')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"
+vim.opt.fillchars="eob: "
+
