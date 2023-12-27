@@ -7,6 +7,13 @@ return {
     },
     config = function()
       require('treesitter-context').setup {
+        ensure_installed = {
+          "lua",
+          "javascript",
+          "typescript",
+          "jsx",
+          "tsx"
+        },
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
         max_lines = 1, -- How many lines the window should span. Values <= 0 mean no limit.
         min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
