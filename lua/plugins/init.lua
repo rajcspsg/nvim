@@ -63,7 +63,7 @@ local plugins = {
     event = "VeryLazy"
   },
   {
-    "windp/nvim-ts-autotag",
+    "windwp/nvim-ts-autotag",
     ft = {
       "javascript",
       "javascriptreact",
