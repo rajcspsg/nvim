@@ -57,9 +57,35 @@ local plugins = {
   },
   'erietz/vim-terminator',
   {"is0n/jaq-nvim"},
-  { 'CRAG666/code_runner.nvim', dependenciess = 'nvim-lua/plenary.nvim' },
+  { 'CRAG666/code_runner.nvim', dependencies = 'nvim-lua/plenary.nvim' },
+  {
+    "nvimtools/none-ls.nvim",
+    event = "VeryLazy"
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    ft = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact"
+    },
+    config = function()
+      require("nvim-ts-autotag").setup({})
+    end
+  },
   {
     "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "eslint-lsp",
+        "prettierd",
+        "tailwindcss-language-server",
+        "typescript-language-server"
+      }
+    }
+  },
+  {
     "williamboman/mason-lspconfig.nvim",
     "neovim/nvim-lspconfig",
     "simrat39/rust-tools.nvim"
