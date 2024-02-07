@@ -17,6 +17,7 @@ require("astro-ui-config")
 --require('lualine-config')
 --require('bufferline-config')
 require('nvim-tree-config')
+require('neotree-config')
 require('treesitter-config')
 require('autopairs-config')
 require('whichkey-config')
@@ -35,3 +36,5 @@ vim.cmd('colorscheme astrodark') -- " Dark theme (default)
 vim.cmd('set nofoldenable')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"
+
+
