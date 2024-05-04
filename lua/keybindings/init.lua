@@ -10,12 +10,13 @@ map('n', '<C-k>', '<C-w>k', {noremap = true, silent =false})
 -- map('i', 'jk', '<ESC>', {noremap = true, silent = false})
 -- map('i', 'kj', '<ESC>', {noremap = true, silent = false})
 
-map('n', '<leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true })
+--map('n', '<leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true })
 
 map('v', '<', '<gv', { noremap = true, silent = false })
 map('v', '>', '>gv', { noremap = true, silent = false })
 
-
+-- NeoTree
+vim.keymap.set('n', '<C-e>', '<Cmd>Neotree toggle<CR>')
 -- LSP
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>", {})
 map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", {})

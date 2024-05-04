@@ -11,12 +11,23 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+for _, source in ipairs {
+  "astronvim.bootstrap",
+  "astronvim.options",
+--  "astronvim.lazy",
+--  "astronvim.autocmds",
+--  "astronvim.mappings",
+} do
+  local status_ok, fault = pcall(require, source)
+  if not status_ok then vim.api.nvim_err_writeln("Failed to load " .. source .. "\n\n" .. fault) end
+end
+
 require('plugins')
 require('options')
 require("astro-ui-config")
+
 --require('lualine-config')
 --require('bufferline-config')
-require('nvim-tree-config')
 require('treesitter-config')
 require('autopairs-config')
 require('whichkey-config')
