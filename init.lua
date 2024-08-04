@@ -14,9 +14,6 @@ vim.opt.rtp:prepend(lazypath)
 for _, source in ipairs {
   "astronvim.bootstrap",
   "astronvim.options",
---  "astronvim.lazy",
---  "astronvim.autocmds",
---  "astronvim.mappings",
 } do
   local status_ok, fault = pcall(require, source)
   if not status_ok then vim.api.nvim_err_writeln("Failed to load " .. source .. "\n\n" .. fault) end
@@ -35,6 +32,7 @@ require('telescope-config')
 require('colorizer-config')
 require('conjure')
 require('lsp')
+require('neo-tree-config')
 require('mason-lspconfig')
 require('jaq-nvim-config')
 require('code-runner-config')
