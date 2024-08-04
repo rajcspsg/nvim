@@ -31,6 +31,6 @@ return {
   -- branch = "nightly",
   keys = {
     { "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" },
-    { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview open" },
+--    { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview open" },
   },
 }
