@@ -25,6 +25,7 @@ require('options')
 
 --require('lualine-config')
 --require('bufferline-config')
+require('neo-tree-config')
 require('treesitter-config')
 require('autopairs-config')
 require('whichkey-config')
