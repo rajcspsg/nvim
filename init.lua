@@ -12,8 +12,8 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 for _, source in ipairs {
-  "astronvim.bootstrap",
-  "astronvim.options",
+  "rajnvim.bootstrap",
+  "rajnvim.options",
 } do
   local status_ok, fault = pcall(require, source)
   if not status_ok then vim.api.nvim_err_writeln("Failed to load " .. source .. "\n\n" .. fault) end
@@ -21,7 +21,7 @@ end
 
 require('plugins')
 require('options')
---require("astro-ui-config")
+require("astro-ui-config")
 
 --require('lualine-config')
 --require('bufferline-config')
@@ -39,7 +39,7 @@ require('code-runner-config')
 require('keybindings')
 require('devicons')
 require('git-config')
---vim.cmd('colorscheme astrodark') -- " Dark theme (default)
+vim.cmd('colorscheme astrodark') -- " Dark theme (default)
 vim.cmd('set nofoldenable')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"

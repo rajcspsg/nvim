@@ -1,3 +1,4 @@
+
 require("astrotheme").setup({
   palette = "astrodark", -- String of the default palette to use when calling `:colorscheme astrotheme`
   background = { -- :h background, palettes to use when using the core vim background colors
@@ -30,24 +31,6 @@ require("astrotheme").setup({
     ["bufferline.nvim"] = false,
   },
 
-  palettes = {
-    global = {             -- Globally accessible palettes, theme palettes take priority.
-      my_grey = "#ebebeb",
-      my_color = "#ffffff"
-    },
-    astrodark = {          -- Extend or modify astrodarks palette colors
-      ui = {
-        red = "#800010", -- Overrides astrodarks red UI color
-        accent = "#CC83E3"  -- Changes the accent color of astrodark.
-      },
-      syntax = {
-        cyan = "#800010", -- Overrides astrodarks cyan syntax color
-        comments = "#ffaacd"  -- Overrides astrodarks comment color.
-      },
-      my_color = "#000000" -- Overrides global.my_color
-    },
-  },
-
   highlights = {
     global = {             -- Add or modify hl groups globally, theme specific hl groups take priority.
       modify_hl_groups = function(hl, c)
@@ -63,5 +46,6 @@ require("astrotheme").setup({
       end,
       ["@String"] = {fg = "#ff00ff", bg = "NONE"},
     },
-  },
+  }
+
 })
