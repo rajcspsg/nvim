@@ -1,24 +1,24 @@
 --- ### AstroNvim Core Bootstrap
 --
--- This module simply sets up the global `astronvim` module.
--- This is automatically loaded and should not be resourced, everything is accessible through the global `astronvim` variable.
+-- This module simply sets up the global `rajnvim` module.
+-- This is automatically loaded and should not be resourced, everything is accessible through the global `rajnvim` variable.
 --
--- @module astronvim.bootstrap
+-- @module rajnvim.bootstrap
 -- @copyright 2022
 -- @license GNU General Public License v3.0
 
-_G.astronvim = {}
+_G.rajnvim = {}
 
 --- installation details from external installers
-astronvim.install = _G["astronvim_installation"] or { home = vim.fn.stdpath "config" }
-astronvim.supported_configs = { astronvim.install.home }
---- external astronvim configuration folder
-astronvim.install.config = vim.fn.stdpath("config"):gsub("[^/\\]+$", "astronvim")
+rajnvim.install = _G["rajnvim_installation"] or { home = vim.fn.stdpath "config" }
+rajnvim.supported_configs = { rajnvim.install.home }
+--- external rajnvim configuration folder
+rajnvim.install.config = vim.fn.stdpath("config"):gsub("[^/\\]+$", "rajnvim")
 -- check if they are the same, protects against NVIM_APPNAME use for isolated install
-if astronvim.install.home ~= astronvim.install.config then
-  vim.opt.rtp:append(astronvim.install.config)
-  --- supported astronvim user config folders
-  table.insert(astronvim.supported_configs, astronvim.install.config)
+if rajnvim.install.home ~= rajnvim.install.config then
+  vim.opt.rtp:append(rajnvim.install.config)
+  --- supported rajnvim user config folders
+  table.insert(rajnvim.supported_configs, rajnvim.install.config)
 end
 
 --- Looks to see if a module path references a lua file in a configuration folder and tries to load it. If there is an error loading the file, write an error and continue
@@ -28,7 +28,7 @@ local function load_module_file(module)
   -- placeholder for final return value
   local found_file = nil
   -- search through each of the supported configuration locations
-  for _, config_path in ipairs(astronvim.supported_configs) do
+  for _, config_path in ipairs(rajnvim.supported_configs) do
     -- convert the module path to a file path (example user.init -> user/init.lua)
     local module_path = config_path .. "/lua/" .. module:gsub("%.", "/") .. ".lua"
     -- check if there is a readable file, if so, set it as found
@@ -99,7 +99,7 @@ end
 ---@param default? any The default value that will be overridden
 ---@param extend? boolean # Whether extend the default settings or overwrite them with the user settings entirely (default: true)
 ---@return any # The new configuration settings with the user overrides applied
-function astronvim.user_opts(module, default, extend)
+function rajnvim.user_opts(module, default, extend)
   -- default to extend = true
   if extend == nil then extend = true end
   -- if no default table is provided set it to an empty table
@@ -115,18 +115,18 @@ function astronvim.user_opts(module, default, extend)
 end
 
 --- Updater settings overridden with any user provided configuration
-astronvim.updater = {
-  options = astronvim.user_opts("updater", { remote = "origin", channel = "stable" }),
+rajnvim.updater = {
+  options = rajnvim.user_opts("updater", { remote = "origin", channel = "stable" }),
   snapshot = { module = "lazy_snapshot", path = vim.fn.stdpath "config" .. "/lua/lazy_snapshot.lua" },
-  rollback_file = vim.fn.stdpath "cache" .. "/astronvim_rollback.lua",
+  rollback_file = vim.fn.stdpath "cache" .. "/rajnvim_rollback.lua",
 }
-local options = astronvim.updater.options
-if astronvim.install.is_stable ~= nil then options.channel = astronvim.install.is_stable and "stable" or "nightly" end
+local options = rajnvim.updater.options
+if rajnvim.install.is_stable ~= nil then options.channel = rajnvim.install.is_stable and "stable" or "nightly" end
 if options.pin_plugins == nil then options.pin_plugins = options.channel == "stable" end
 
 --- table of user created terminals
-astronvim.user_terminals = {}
+rajnvim.user_terminals = {}
 --- table of language servers to ignore the setup of, configured through lsp.skip_setup in the user configuration
-astronvim.lsp = { skip_setup = astronvim.user_opts("lsp.skip_setup", {}), progress = {} }
+rajnvim.lsp = { skip_setup = rajnvim.user_opts("lsp.skip_setup", {}), progress = {} }
 --- the default colorscheme to apply on startup
-astronvim.default_colorscheme = astronvim.user_opts("colorscheme", "astrotheme", false)
+rajnvim.default_colorscheme = rajnvim.user_opts("colorscheme", "astrotheme", false)

@@ -13,7 +13,7 @@ vim.opt.rtp:prepend(lazypath)
 
 for _, source in ipairs {
   "rajnvim.bootstrap",
-  "rajnvim.options",
+--  "rajnvim.options",
 } do
   local status_ok, fault = pcall(require, source)
   if not status_ok then vim.api.nvim_err_writeln("Failed to load " .. source .. "\n\n" .. fault) end
@@ -40,6 +40,8 @@ require('keybindings')
 require('devicons')
 require('git-config')
 vim.cmd('colorscheme astrodark') -- " Dark theme (default)
-vim.cmd('set nofoldenable')
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes="clojure,scheme,lisp,fennel,janet,racket"
+vim.cmd('set nofoldenable')
+vim.opt.fillchars='eob: '
+
