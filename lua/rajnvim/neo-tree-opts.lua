@@ -41,7 +41,7 @@
       commands = {
         system_open = function(state)
           -- TODO: just use vim.ui.open when dropping support for Neovim <0.10
-          (vim.ui.open or require("astronvim.utils").system_open)(state.tree:get_node():get_id())
+          (vim.ui.open or require("rajnvim.utils").system_open)(state.tree:get_node():get_id())
         end,
         parent_or_close = function(state)
           local node = state.tree:get_node()
@@ -115,7 +115,13 @@
         },
       },
       filesystem = {
-        follow_current_file = { enabled = true },
+        filtered_items = {
+            visible = true,
+            hide_dotfiles = false,
+            hide_gitignored = false,
+            hide_hidden = false,
+          },
+        follow_current_file = { enabled = false, leave_dirs_open = true, },
         hijack_netrw_behavior = "open_current",
         use_libuv_file_watcher = vim.fn.has "win32" ~= 1,
       },
@@ -124,6 +130,7 @@
           event = "neo_tree_buffer_enter",
           handler = function(_) vim.opt_local.signcolumn = "auto" end,
         },
+          
       },
     }
     return opts

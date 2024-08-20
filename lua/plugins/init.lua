@@ -6,26 +6,12 @@ local plugins = {
   --'nvim-tree/nvim-web-devicons',
   'shaunsingh/nord.nvim',
   { "AstroNvim/astrotheme" },
- --[=====[ {
-    "AstroNvim/astroui",
-    lazy = false, -- disable lazy loading
-    priority = 10000, -- load AstroUI first
-    opts = {
-      -- set configuration options  as described below
-    }
-  },--]=====]
-  {
+ {
    "MunifTanjim/nui.nvim",
    lazy = false,
   },
   'nvim-tree/nvim-web-devicons',
-  --[[=={
-    'kyazdani42/nvim-tree.lua',
-    dependenciess = 'kyazdani42/nvim-web-devicons',
-    config = function()require'nvim-tree'.setup {} end
-    },
- ==]]--
-  {'windwp/nvim-autopairs'},
+ {'windwp/nvim-autopairs'},
 
   {'folke/which-key.nvim'},
 
