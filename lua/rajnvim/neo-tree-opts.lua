@@ -1,4 +1,3 @@
-
     local utils = require "rajnvim.utils"
     local get_icon = utils.get_icon
     local opts = {
