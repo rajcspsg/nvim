@@ -25,6 +25,7 @@ require("astro-ui-config")
 
 --require('lualine-config')
 --require('bufferline-config')
+--require('conform-config')
 require('treesitter-config')
 require('autopairs-config')
 require('whichkey-config')
