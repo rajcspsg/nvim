@@ -1,9 +1,9 @@
-vim.cmd('filetype plugin indent on')
-vim.o.shortmess = vim.o.shortmess .. 'c'
+vim.cmd("filetype plugin indent on")
+vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.hidden = true
-vim.o.whichwrap = 'b,s,<,>,[,],h,l'
+vim.o.whichwrap = "b,s,<,>,[,],h,l"
 vim.o.pumheight = 10
-vim.o.fileencoding = 'utf-8'
+vim.o.fileencoding = "utf-8"
 vim.o.cmdheight = 2
 --vim.opt.modifyable= 'on'
 vim.o.splitbelow = true
@@ -35,11 +35,11 @@ vim.o.autoindent = true
 vim.bo.autoindent = true
 vim.o.expandtab = true
 vim.bo.expandtab = true
-vim.wo.foldmethod = 'expr'
-vim.wo.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.wo.foldmethod = "expr"
+vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 --vim.opt_global.shortmess:remove("F"):append("c")
 vim.opt_global.completeopt = { "menu", "menuone", "noinsert", "noselect" }
-vim.api.nvim_set_option('updatetime', 300)
+vim.api.nvim_set_option("updatetime", 300)
 vim.cmd([[
 set signcolumn=yes
 autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
