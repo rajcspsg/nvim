@@ -19,7 +19,8 @@ local plugins = {
 		"nvim-telescope/telescope.nvim",
 		dependenciess = { { "nvim-lua/plenary.nvim" } },
 	},
-
+	"folke/twilight.nvim",
+	"folke/zen-mode.nvim",
 	"onsails/lspkind-nvim",
 	"hrsh7th/cmp-buffer",
 	"hrsh7th/cmp-path",
