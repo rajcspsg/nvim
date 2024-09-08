@@ -108,9 +108,10 @@ local plugins = {
 	},
 	{
 		"tpope/vim-dispatch",
-		"clojure-vim/vim-jack-in",
+		--"clojure-vim/vim-jack-in",
 		"radenling/vim-dispatch-neovim",
 	},
+	{ "TreyBastian/nvim-jack-in", config = true },
 	"echasnovski/mini.nvim",
 	{
 		"mrcjkb/haskell-tools.nvim",
