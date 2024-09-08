@@ -13,7 +13,6 @@ vim.opt.rtp:prepend(lazypath)
 
 for _, source in ipairs({
 	"rajnvim.bootstrap",
-	--  "rajnvim.options",
 }) do
 	local status_ok, fault = pcall(require, source)
 	if not status_ok then
@@ -26,21 +25,18 @@ require("plugins")
 require("options")
 require("astro-ui-config")
 
---require('lualine-config')
---require('bufferline-config')
---require('conform-config')
+require("lualine-config")
+require("bufferline-config")
+require("conform-config")
 require("treesitter-config")
 require("autopairs-config")
 --require("whichkey-config")
 require("telescope-config")
 require("colorizer-config")
-require("conjure")
-require("clojure-config")
 require("lsp")
 require("mason-lspconfig")
 require("jaq-nvim-config")
 require("code-runner-config")
---require('vim-terminator-config')
 require("devicons")
 require("git-config")
 vim.cmd("colorscheme astrodark") -- " Dark theme (default)

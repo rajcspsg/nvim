@@ -29,7 +29,11 @@ local plugins = {
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-vsnip",
 	"hrsh7th/vim-vsnip",
-
+	{ "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons" },
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+	},
 	"norcalli/nvim-colorizer.lua",
 	{
 		"p00f/cphelper.nvim",
@@ -105,9 +109,10 @@ local plugins = {
 	},
 	{
 		"tpope/vim-dispatch",
-		"clojure-vim/vim-jack-in",
+		--"clojure-vim/vim-jack-in",
 		"radenling/vim-dispatch-neovim",
 	},
+	{ "TreyBastian/nvim-jack-in", config = true },
 	"echasnovski/mini.nvim",
 	{
 		"mrcjkb/haskell-tools.nvim",
