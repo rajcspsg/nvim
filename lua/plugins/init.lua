@@ -90,7 +90,7 @@ local plugins = {
 		"neovim/nvim-lspconfig",
 		"simrat39/rust-tools.nvim",
 	},
-
+	"nanozuki/tabby.nvim",
 	"glepnir/dashboard-nvim",
 	"mfussenegger/nvim-jdtls",
 	{ "scalameta/nvim-metals", dependenciess = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap" } },
@@ -144,6 +144,7 @@ local plugins = {
 		config = true,
 	},
 	{ "akinsho/git-conflict.nvim", version = "*", config = true },
+	"ecosse3/galaxyline.nvim",
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
