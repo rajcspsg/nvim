@@ -9,7 +9,7 @@ return {
 			require("treesitter-context").setup({
 				ensure_installed = {
 					"clojure",
-					"lua",
+					--				"lua",
 					"javascript",
 					"typescript",
 					"jsx",
