@@ -19,7 +19,7 @@ local langservers = {
 	"clojure_lsp",
 	"cmake",
 	"cssls",
-	"elixirls",
+	-- "elixirls",
 	"emmet_ls",
 	"golangci_lint_ls",
 	"gopls",
@@ -29,7 +29,7 @@ local langservers = {
 	"jdtls",
 	"kotlin_language_server",
 	"lua_ls",
-	"metals",
+	-- "metals",
 	"ocamlls",
 	"pylsp",
 	"lua_ls",
@@ -86,7 +86,7 @@ cmd([[augroup end]])
 ----------------------------------
 -- LSP Setup ---------------------
 ----------------------------------
-metals_config = require("metals").bare_config()
+local metals_config = require("metals").bare_config()
 
 -- Example of settings
 metals_config.settings = {
@@ -102,8 +102,7 @@ metals_config.settings = {
 -- metals_config.init_options.statusBarProvider = "on"
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+metals_config.capabilities = capabilities
 
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")

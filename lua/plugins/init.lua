@@ -12,9 +12,17 @@ local plugins = {
 	},
 	"nvim-tree/nvim-web-devicons",
 	{ "windwp/nvim-autopairs" },
-
+	{ "tiagovla/scope.nvim" },
 	{ "folke/which-key.nvim" },
-
+	{
+		"LunarVim/breadcrumbs.nvim",
+		dependencies = {
+			{ "SmiteshP/nvim-navic" },
+		},
+		config = function()
+			require("breadcrumbs").setup({})
+		end,
+	},
 	{
 		"nvim-telescope/telescope.nvim",
 		dependenciess = { { "nvim-lua/plenary.nvim" } },
@@ -29,7 +37,23 @@ local plugins = {
 	"hrsh7th/cmp-nvim-lsp",
 	"hrsh7th/cmp-vsnip",
 	"hrsh7th/vim-vsnip",
-	{ "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons" },
+	--{ "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons" },
+	{
+		"akinsho/bufferline.nvim",
+		event = "VeryLazy",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+			{
+				"echasnovski/mini.bufremove",
+				version = "*",
+				config = function()
+					require("mini.bufremove").setup({
+						silent = true,
+					})
+				end,
+			},
+		},
+	},
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
