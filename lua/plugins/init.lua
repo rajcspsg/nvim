@@ -179,6 +179,30 @@ local plugins = {
 		},
 	},
 	{
+		"SmiteshP/nvim-navic",
+		event = { "CursorMoved", "BufWinEnter", "BufFilePost" },
+		config = function()
+			local caretRight = ""
+			vim.api.nvim_set_hl(0, "NavicText", { link = "Winbar" })
+			vim.api.nvim_set_hl(0, "NavicSeparator", { link = "Winbar" })
+
+			require("nvim-navic").setup({
+				lsp = {
+					auto_attach = true,
+					preference = nil,
+				},
+				highlight = true,
+				separator = " " .. caretRight .. " ",
+				depth_limit = 0,
+				depth_limit_indicator = "..",
+				safe_output = true,
+			})
+
+			require("rajnvim.winbar")
+		end,
+		dependencies = "neovim/nvim-lspconfig",
+	},
+	{
 		"stevearc/conform.nvim",
 		event = { "BufReadPre", "BufNewFile" },
 		config = function()
