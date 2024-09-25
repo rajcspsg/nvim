@@ -228,37 +228,37 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "BufWinEnter", "BufFilePost" }, {
 		end
 
 		if vim.bo.filetype == "dapui_watches" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.watch .. "Watches" .. "%*"
 			return
 		end
 
 		if vim.bo.filetype == "dapui_stacks" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.git .. "Stacks" .. "%*"
 			return
 		end
 
 		if vim.bo.filetype == "dapui_breakpoints" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.bigCircle .. "Breakpoints" .. "%*"
 			return
 		end
 
 		if vim.bo.filetype == "dapui_scopes" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.telescope .. "Scopes" .. "%*"
 			return
 		end
 
 		if vim.bo.filetype == "dap-repl" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.consoleDebug .. "Debug Console" .. "%*"
 			return
 		end
 
 		if vim.bo.filetype == "dapui_console" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.console .. "Console" .. "%*"
 			return
 		end
@@ -269,7 +269,7 @@ vim.api.nvim_create_autocmd({ "CursorMoved", "BufWinEnter", "BufFilePost" }, {
 		end
 
 		if vim.bo.filetype == "blame" then
-			local hl_group = "EcovimSecondary"
+			local hl_group = "RajnvimSecondary"
 			vim.opt_local.winbar = " " .. "%#" .. hl_group .. "#" .. icons.git .. "Blame" .. "%*"
 			return
 		end
