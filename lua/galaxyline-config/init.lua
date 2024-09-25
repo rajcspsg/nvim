@@ -1,7 +1,149 @@
+local gl_icons = {
+	abc = "  ",
+	array = "  ",
+	arrowReturn = "  ",
+	bigCircle = "  ",
+	bigUnfilledCircle = "  ",
+	bomb = "  ",
+	bookMark = "  ",
+	boolean = "  ",
+	box = " 󰅫 ",
+	buffer = "  ",
+	bug = "  ",
+	calculator = "  ",
+	calendar = "  ",
+	caretRight = "",
+	checkSquare = "  ",
+	copilot = "",
+	codeium = "",
+	exit = " 󰗼 ",
+	chevronRight = "",
+	circle = "  ",
+	class = "  ",
+	close = "  ",
+	code = "  ",
+	cog = "  ",
+	color = "  ",
+	comment = "  ",
+	constant = "  ",
+	constructor = "  ",
+	container = "  ",
+	console = " 󰞷 ",
+	consoleDebug = "  ",
+	cubeTree = "  ",
+	dashboard = "  ",
+	database = "  ",
+	enum = "  ",
+	enumMember = "  ",
+	error = "  ",
+	errorOutline = "  ",
+	errorSlash = " ﰸ ",
+	event = "  ",
+	field = "  ",
+	file = "  ",
+	fileBg = "  ",
+	fileCopy = "  ",
+	fileCutCorner = "  ",
+	fileNoBg = "  ",
+	fileNoLines = "  ",
+	fileNoLinesBg = "  ",
+	fileRecent = "  ",
+	fire = "  ",
+	folder = "  ",
+	folderNoBg = "  ",
+	folderOpen = "  ",
+	folderOpen2 = " 󰉖 ",
+	folderOpenNoBg = "  ",
+	forbidden = " 󰍛 ",
+	func = "  ",
+	gear = "  ",
+	gears = "  ",
+	git = "  ",
+	gitAdd = "  ",
+	gitChange = " 󰏬 ",
+	gitRemove = "  ",
+	hexCutOut = "  ",
+	history = "  ",
+	hook = " ﯠ ",
+	info = "  ",
+	infoOutline = "  ",
+	interface = "  ",
+	key = "  ",
+	keyword = "  ",
+	light = "  ",
+	lightbulb = "  ",
+	lightbulbOutline = "  ",
+	list = "  ",
+	lock = "  ",
+	m = " m ",
+	method = "  ",
+	module = "  ",
+	newFile = "  ",
+	note = " 󰎚 ",
+	number = "  ",
+	numbers = "  ",
+	object = "  ",
+	operator = "  ",
+	package = " 󰏓 ",
+	packageUp = " 󰏕 ",
+	packageDown = " 󰏔 ",
+	paint = "  ",
+	paragraph = " 󰉢 ",
+	pencil = "  ",
+	pie = "  ",
+	pin = " 󰐃 ",
+	project = "  ",
+	property = "  ",
+	questionCircle = "  ",
+	reference = "  ",
+	ribbon = " 󰑠 ",
+	robot = " 󰚩 ",
+	scissors = "  ",
+	scope = "  ",
+	search = "  ",
+	settings = "  ",
+	signIn = "  ",
+	snippet = "  ",
+	sort = "  ",
+	spell = " 暈",
+	squirrel = "  ",
+	stack = "  ",
+	string = "  ",
+	struct = "  ",
+	table = "  ",
+	tag = "  ",
+	telescope = "  ",
+	terminal = "  ",
+	text = "  ",
+	threeDots = " 󰇘 ",
+	threeDotsBoxed = "  ",
+	timer = "  ",
+	trash = "  ",
+	tree = "  ",
+	treeDiagram = " 󰙅 ",
+	typeParameter = "  ",
+	unit = "  ",
+	up_hexagon = " 󰋘 ",
+	value = "  ",
+	variable = "  ",
+	warningCircle = "  ",
+	vim = "  ",
+	warningTriangle = "  ",
+	warningTriangleNoBg = "  ",
+	watch = "  ",
+	word = "  ",
+	wrench = "  ",
+}
+
+local statusline = {
+	path_enabled = false,
+	path = "relative", -- absolute/relative
+}
+
 local gl = require("galaxyline")
 local condition = require("galaxyline.condition")
-local utils = require("utils")
-local tokyonight_colors = require("tokyonight.colors").setup({})
+-- local utils = require("utils")
+-- local tokyonight_colors = require("tokyonight.colors").setup({})
 local package_info_present, package = pcall(require, "package-info")
 
 -- Configuration {{{1
@@ -61,11 +203,7 @@ gl.short_line_list = { "NvimTree", "vista", "dbui", "packer", "tagbar" }
 local gls = gl.section
 
 local bgcolor = function()
-	if EcoVim.colorscheme == "nightfly" then
-		return "#011627"
-	else
-		return nil
-	end
+	return "#011627"
 end
 
 -- Colours, maps and icons {{{2
@@ -365,7 +503,7 @@ table.insert(gls.left, {
 table.insert(gls.left, {
 	DiagnosticError = {
 		provider = "DiagnosticError",
-		icon = EcoVim.icons.errorOutline,
+		icon = gl_icons.errorOutline,
 		separator_highlight = { colors.gitbg, colors.bg },
 		highlight = { colors.diagerror, colors.lspbg },
 	},
@@ -380,14 +518,14 @@ table.insert(gls.left, {
 table.insert(gls.left, {
 	DiagnosticHint = {
 		provider = "DiagnosticHint",
-		icon = EcoVim.icons.lightbulbOutline,
+		icon = gl_icons.lightbulbOutline,
 		highlight = { colors.diaghint, colors.lspbg },
 	},
 })
 table.insert(gls.left, {
 	DiagnosticInfo = {
 		provider = "DiagnosticInfo",
-		icon = EcoVim.icons.infoOutline,
+		icon = gl_icons.infoOutline,
 		highlight = { colors.diaginfo, colors.lspbg },
 	},
 })
@@ -459,7 +597,7 @@ table.insert(gls.right, {
 	},
 })
 
-if EcoVim.statusline.path_enabled then
+if statusline.path_enabled then
 	table.insert(gls.right, {
 		FileName = {
 			provider = function()
