@@ -1,10 +1,6 @@
 -- vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
-	-- Packer can manage itself
-	"wbthomason/packer.nvim",
-	--'nvim-tree/nvim-web-devicons',
-	"shaunsingh/nord.nvim",
 	{ "AstroNvim/astrotheme" },
 	{
 		"MunifTanjim/nui.nvim",
@@ -14,15 +10,6 @@ local plugins = {
 	{ "windwp/nvim-autopairs" },
 	{ "tiagovla/scope.nvim" },
 	{ "folke/which-key.nvim" },
-	{
-		"LunarVim/breadcrumbs.nvim",
-		dependencies = {
-			{ "SmiteshP/nvim-navic" },
-		},
-		config = function()
-			require("breadcrumbs").setup({})
-		end,
-	},
 	{
 		"nvim-telescope/telescope.nvim",
 		dependenciess = { { "nvim-lua/plenary.nvim" } },
@@ -58,7 +45,11 @@ local plugins = {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 	},
-	"norcalli/nvim-colorizer.lua",
+	{
+		"folke/trouble.nvim",
+		cmd = { "Trouble" },
+		opts = {},
+	},
 	{
 		"p00f/cphelper.nvim",
 	},
