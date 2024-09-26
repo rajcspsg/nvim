@@ -37,6 +37,8 @@ require("jaq-nvim-config")
 require("code-runner-config")
 require("devicons")
 require("git-config")
+require("smooth-cursor-config")
+require("close-buffer-config")
 vim.cmd("colorscheme astrodark") -- " Dark theme (default)
 -- vim.g.tokyonight_style = "night"
 vim.g.sexp_filetypes = "clojure,scheme,lisp,fennel,janet,racket"
