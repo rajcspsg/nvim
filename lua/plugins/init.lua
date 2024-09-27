@@ -12,6 +12,12 @@ local plugins = {
 			require("hlslens").setup({})
 		end,
 	},
+	{
+		"VidocqH/lsp-lens.nvim",
+		config = function()
+			require("lsp-lens").setup({})
+		end,
+	},
 	{ "kazhala/close-buffers.nvim" },
 	{ "nvim-tree/nvim-web-devicons" },
 	{
