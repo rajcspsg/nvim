@@ -6,7 +6,23 @@ local plugins = {
 		"MunifTanjim/nui.nvim",
 		lazy = false,
 	},
-	"nvim-tree/nvim-web-devicons",
+	{
+		"kevinhwang91/nvim-hlslens",
+		config = function()
+			require("hlslens").setup({})
+		end,
+	},
+	{
+		"VidocqH/lsp-lens.nvim",
+		config = function()
+			require("lsp-lens").setup({})
+		end,
+	},
+	{ "kazhala/close-buffers.nvim" },
+	{ "nvim-tree/nvim-web-devicons" },
+	{
+		"gen740/SmoothCursor.nvim",
+	},
 	{ "windwp/nvim-autopairs" },
 	{ "tiagovla/scope.nvim" },
 	{ "folke/which-key.nvim" },
