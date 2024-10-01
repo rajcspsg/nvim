@@ -18,12 +18,187 @@ local plugins = {
 			require("lsp-lens").setup({})
 		end,
 	},
+	{
+		"zbirenbaum/neodim",
+		event = "LspAttach",
+		config = function()
+			require("neodim").setup({
+				alpha = 0.75,
+				blend_color = "#000000",
+				hide = {
+					underline = true,
+					virtual_text = true,
+					signs = true,
+				},
+				regex = {
+					"[uU]nused",
+					"[nN]ever [rR]ead",
+					"[nN]ot [rR]ead",
+				},
+				priority = 128,
+				disable = {},
+			})
+		end,
+	},
+	{
+		"kosayoda/nvim-lightbulb",
+		config = function()
+			require("nvim-lightbulb").setup({
+				autocmd = { enabled = true },
+			})
+		end,
+	},
+	{
+		"anuvyklack/pretty-fold.nvim",
+		config = function()
+			require("pretty-fold").setup()
+		end,
+	},
+	{
+		"anuvyklack/fold-preview.nvim",
+		dependencies = { "anuvyklack/keymap-amend.nvim" },
+		config = function()
+			require("fold-preview").setup({
+				-- Your configuration goes here.
+			})
+		end,
+	},
+	{
+		"sidebar-nvim/sidebar.nvim",
+		config = function()
+			local sidebar = require("sidebar-nvim")
+			local opts = { open = false }
+			sidebar.setup(opts)
+		end,
+	},
+	{
+		"ray-x/lsp_signature.nvim",
+		event = "VeryLazy",
+		opts = {},
+		config = function(_, opts)
+			require("lsp_signature").setup(opts)
+		end,
+	},
+	{
+		"onsails/lspkind-nvim",
+		event = "InsertEnter",
+		dependencies = {
+			"hrsh7th/nvim-cmp",
+		},
+	},
+	{
+		"blanktiger/aqf.nvim",
+		config = function()
+			require("aqf").setup({})
+		end,
+	},
+	{
+		"kosayoda/nvim-lightbulb",
+		event = "LspAttach",
+		opts = {
+			autocmd = { enabled = true },
+			sign = { enabled = true, text = "" },
+			action_kinds = { "quickfix", "refactor" },
+			ignore = {
+				actions_without_kind = true,
+			},
+		},
+	},
+	{
+		"dnlhc/glance.nvim",
+		cmd = { "Glance" },
+		event = "LspAttach",
+		opts = {
+			border = {
+				enable = true,
+			},
+			use_trouble_qf = true,
+			hooks = {
+				before_open = function(results, open, jump, method)
+					local uri = vim.uri_from_bufnr(0)
+					if #results == 1 then
+						local target_uri = results[1].uri or results[1].targetUri
+
+						if target_uri == uri then
+							jump(results[1])
+						else
+							open(results)
+						end
+					else
+						open(results)
+					end
+				end,
+			},
+		},
+	},
+	{
+		"zbirenbaum/neodim",
+		event = "LspAttach",
+		opts = {
+			alpha = 0.60,
+		},
+	},
+	{
+		"Bekaboo/dropbar.nvim",
+		-- event = { "BufReadPost", "BufNewFile" },
+		config = function()
+			-- turn off global option for windowline
+			vim.opt.winbar = nil
+			vim.keymap.set("n", "<leader>ls", require("dropbar.api").pick, { desc = "[s]ymbols" })
+		end,
+		enabled = true,
+		dependencies = {
+			"nvim-telescope/telescope-fzf-native.nvim",
+		},
+	},
 	{ "kazhala/close-buffers.nvim" },
+	{
+		"alexghergh/nvim-tmux-navigation",
+		config = function()
+			local nvim_tmux_nav = require("nvim-tmux-navigation")
+
+			nvim_tmux_nav.setup({
+				disable_when_zoomed = true, -- defaults to false
+			})
+
+			vim.keymap.set("n", "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+			vim.keymap.set("n", "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+			vim.keymap.set("n", "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+			vim.keymap.set("n", "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+			vim.keymap.set("n", "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+			vim.keymap.set("n", "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+		end,
+	},
 	{ "nvim-tree/nvim-web-devicons" },
 	{
 		"gen740/SmoothCursor.nvim",
 	},
 	{ "windwp/nvim-autopairs" },
+	{
+		"HiPhish/rainbow-delimiters.nvim",
+		enabled = true,
+		event = { "BufReadPost", "BufNewFile" },
+		config = function()
+			local rainbow_delimiters = require("rainbow-delimiters")
+			vim.g.rainbow_delimiters = {
+				strategy = {
+					[""] = rainbow_delimiters.strategy["global"],
+					vim = rainbow_delimiters.strategy["local"],
+					html = rainbow_delimiters.strategy["local"],
+					commonlisp = rainbow_delimiters.strategy["local"],
+					fennel = rainbow_delimiters.strategy["local"],
+				},
+				query = {
+					[""] = "rainbow-delimiters",
+					lua = "rainbow-blocks",
+					javascript = "rainbow-parens",
+					typescript = "rainbow-parens",
+					tsx = "rainbow-parens",
+					verilog = "rainbow-blocks",
+				},
+			}
+		end,
+	},
 	{ "tiagovla/scope.nvim" },
 	{ "folke/which-key.nvim" },
 	{

@@ -22,9 +22,9 @@ bufferline.setup({
 		end,
 		offsets = {
 			{
-				filetype = "NvimTree",
+				filetype = "NeoTree",
 				text = "File Explorer",
-				highlight = "EcovimNvimTreeTitle",
+				highlight = "RajNeoTreeTitle",
 				text_align = "center",
 				separator = true,
 			},
