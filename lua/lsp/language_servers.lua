@@ -1,6 +1,24 @@
 -- Setup lspconfig.
-local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local vim_capabilities = vim.lsp.protocol.make_client_capabilities()
+vim_capabilities.textDocument.completion.completionItem = {
+	documentationFormat = { "markdown", "plaintext" },
+	snippetSupport = true,
+	preselectSupport = true,
+	insertReplaceSupport = true,
+	labelDetailsSupport = true,
+	deprecatedSupport = true,
+	commitCharactersSupport = true,
+	tagSupport = { valueSet = { 1 } },
+	resolveSupport = {
+		properties = {
+			"documentation",
+			"detail",
+			"additionalTextEdits",
+		},
+	},
+}
 
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim_capabilities)
 local lspconfig = require("lspconfig")
 
 lspconfig.ls_emmet = {
@@ -28,9 +46,6 @@ local langservers = {
 	"html",
 	"jdtls",
 	"kotlin_language_server",
-	"lua_ls",
-	-- "metals",
-	"ocamlls",
 	"pylsp",
 	"lua_ls",
 	"ts_ls",
@@ -42,6 +57,32 @@ for _, server in ipairs(langservers) do
 	require("lspconfig")[server].setup({ capabilities = capabilities })
 end
 
+require("lspconfig").lua_ls.setup({
+	on_init = function(client, _)
+		if client.supports_method("textDocument/semanticTokens") then
+			client.server_capabilities.semanticTokensProvider = nil
+		end
+	end,
+	capabilities = capabilities,
+
+	settings = {
+		Lua = {
+			diagnostics = {
+				globals = { "vim" },
+			},
+			workspace = {
+				library = {
+					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+					[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+					[vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
+					[vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
+				},
+				maxPreload = 100000,
+				preloadFileSize = 10000,
+			},
+		},
+	},
+})
 -- Configure ElixirLS as the LSP server for Elixir.
 require("lspconfig").elixirls.setup({
 	-- cmd = { "/opt/homebrew/Cellar/elixir-ls/0.13.0/bin/elixir-ls" },

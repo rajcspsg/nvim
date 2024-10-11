@@ -1,22 +1,23 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
-vim.g.sexp_filetypes="clojure,scheme,lisp,racket,fennel,janet"
+vim.g.mapleader = " "
+vim.g.maplocalleader = ","
+vim.g.sexp_filetypes = "clojure,scheme,lisp,racket,fennel,janet"
 local map = vim.api.nvim_set_keymap
-map('n', '<C-h>', '<C-w>h', {noremap = true, silent =false})
-map('n', '<C-l>', '<C-w>l', {noremap = true, silent =false})
-map('n', '<C-j>', '<C-w>j', {noremap = true, silent =false})
-map('n', '<C-k>', '<C-w>k', {noremap = true, silent =false})
+
+map("n", "<C-h>", "<C-w>h", { noremap = true, silent = false })
+map("n", "<C-l>", "<C-w>l", { noremap = true, silent = false })
+map("n", "<C-j>", "<C-w>j", { noremap = true, silent = false })
+map("n", "<C-k>", "<C-w>k", { noremap = true, silent = false })
 
 -- map('i', 'jk', '<ESC>', {noremap = true, silent = false})
 -- map('i', 'kj', '<ESC>', {noremap = true, silent = false})
 
 --map('n', '<leader>e', ':NvimTreeToggle<CR>', {noremap = true, silent = true })
 
-map('v', '<', '<gv', { noremap = true, silent = false })
-map('v', '>', '>gv', { noremap = true, silent = false })
+map("v", "<", "<gv", { noremap = true, silent = false })
+map("v", ">", ">gv", { noremap = true, silent = false })
 
 -- NeoTree
-vim.keymap.set('n', '<C-e>', '<Cmd>Neotree toggle<CR>')
+vim.keymap.set("n", "<C-e>", "<Cmd>Neotree toggle<CR>")
 -- LSP
 map("n", "gD", "<cmd>lua vim.lsp.buf.definition()<CR>", {})
 map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", {})
@@ -53,17 +54,17 @@ nmap <F11> <cmd>call vimspector#StepOver()<cr>")
 nmap <F12> <cmd>call vimspector#StepOut()<cr>")
 nmap <F10> <cmd>call vimspector#StepInto()<cr>")
 ]])
-map('n', "Db", ":call vimspector#ToggleBreakpoint()<cr>", {})
-map('n', "Dw", ":call vimspector#AddWatch()<cr>", {})
-map('n', "De", ":call vimspector#Evaluate()<cr>", {})
-map('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 fish <CR> ", {})
-map('n', "t", ":FloatermToggle myfloat<CR>", {})
-map('t', "<Esc>", "<C-\\><C-n>:q<CR>", {})
+map("n", "Db", ":call vimspector#ToggleBreakpoint()<cr>", {})
+map("n", "Dw", ":call vimspector#AddWatch()<cr>", {})
+map("n", "De", ":call vimspector#Evaluate()<cr>", {})
+map("n", "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=2 fish <CR> ", {})
+map("n", "t", ":FloatermToggle myfloat<CR>", {})
+map("t", "<Esc>", "<C-\\><C-n>:q<CR>", {})
 
-map('n', '<leader>R', ':RunCode<CR>', { noremap = true, silent = false })
-map('n', '<leader>Rf', ':RunFile<CR>', { noremap = true, silent = false })
-map('n', '<leader>Rft', ':RunFile tab<CR>', { noremap = true, silent = false })
-map('n', '<leader>Rp', ':RunProject<CR>', { noremap = true, silent = false })
-map('n', '<leader>Rc', ':RunClose<CR>', { noremap = true, silent = false })
-map('n', '<leader>Crf', ':CRFiletype<CR>', { noremap = true, silent = false })
-map('n', '<leader>Crp', ':CRProjects<CR>', { noremap = true, silent = false })
+map("n", "<leader>R", ":RunCode<CR>", { noremap = true, silent = false })
+map("n", "<leader>Rf", ":RunFile<CR>", { noremap = true, silent = false })
+map("n", "<leader>Rft", ":RunFile tab<CR>", { noremap = true, silent = false })
+map("n", "<leader>Rp", ":RunProject<CR>", { noremap = true, silent = false })
+map("n", "<leader>Rc", ":RunClose<CR>", { noremap = true, silent = false })
+map("n", "<leader>Crf", ":CRFiletype<CR>", { noremap = true, silent = false })
+map("n", "<leader>Crp", ":CRProjects<CR>", { noremap = true, silent = false })
