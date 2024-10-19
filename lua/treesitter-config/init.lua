@@ -29,6 +29,12 @@ return {
 				on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
 			})
 			require("nvim-treesitter.configs").setup({
+				highlight = {
+					enable = true,
+				},
+				indent = {
+					enable = true,
+				},
 				textobjects = {
 					enable = true,
 					lookahead = true,
@@ -68,6 +74,14 @@ return {
 						},
 						swap_previous = {
 							["<leader>zA"] = "@parameter.inner",
+						},
+					},
+					lsp_interop = {
+						enable = true,
+						border = "rounded",
+						peek_definition_code = {
+							["<leader>zg"] = "@function.outer",
+							["<leader>zG"] = "@class.outer",
 						},
 					},
 				},

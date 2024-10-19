@@ -1,7 +1,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = ","
 vim.g.sexp_filetypes = "clojure,scheme,lisp,racket,fennel,janet"
-local map = vim.api.nvim_set_keymap
+local map = vim.keymap.set
 
 map("n", "<C-h>", "<C-w>h", { noremap = true, silent = false })
 map("n", "<C-l>", "<C-w>l", { noremap = true, silent = false })

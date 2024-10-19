@@ -132,8 +132,11 @@ local metals_config = require("metals").bare_config()
 -- Example of settings
 metals_config.settings = {
 	showImplicitArguments = true,
+	showImplicitConversionsAndClasses = true,
+	showInferredType = true,
 	excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 }
+metals_config.init_options.statusBarProvider = "off"
 
 -- *READ THIS*
 -- I *highly* recommend setting statusBarProvider to true, however if you do,
