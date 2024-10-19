@@ -19,6 +19,7 @@ vim_capabilities.textDocument.completion.completionItem = {
 }
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim_capabilities)
+
 local lspconfig = require("lspconfig")
 
 lspconfig.ls_emmet = {
@@ -37,7 +38,7 @@ local langservers = {
 	"clojure_lsp",
 	"cmake",
 	"cssls",
-	-- "elixirls",
+	"elixirls",
 	"emmet_ls",
 	"golangci_lint_ls",
 	"gopls",
@@ -46,6 +47,9 @@ local langservers = {
 	"html",
 	"jdtls",
 	"kotlin_language_server",
+	"lua_ls",
+	"metals",
+	"ocamlls",
 	"pylsp",
 	"lua_ls",
 	"ts_ls",
@@ -58,31 +62,45 @@ for _, server in ipairs(langservers) do
 end
 
 require("lspconfig").lua_ls.setup({
+
 	on_init = function(client, _)
 		if client.supports_method("textDocument/semanticTokens") then
 			client.server_capabilities.semanticTokensProvider = nil
 		end
 	end,
+
 	capabilities = capabilities,
 
 	settings = {
+
 		Lua = {
+
 			diagnostics = {
+
 				globals = { "vim" },
 			},
+
 			workspace = {
+
 				library = {
+
 					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+
 					[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+
 					[vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
+
 					[vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
 				},
+
 				maxPreload = 100000,
+
 				preloadFileSize = 10000,
 			},
 		},
 	},
 })
+
 -- Configure ElixirLS as the LSP server for Elixir.
 require("lspconfig").elixirls.setup({
 	-- cmd = { "/opt/homebrew/Cellar/elixir-ls/0.13.0/bin/elixir-ls" },
@@ -127,7 +145,7 @@ cmd([[augroup end]])
 ----------------------------------
 -- LSP Setup ---------------------
 ----------------------------------
-local metals_config = require("metals").bare_config()
+metals_config = require("metals").bare_config()
 
 -- Example of settings
 metals_config.settings = {
@@ -136,6 +154,7 @@ metals_config.settings = {
 	showInferredType = true,
 	excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 }
+
 metals_config.init_options.statusBarProvider = "off"
 
 -- *READ THIS*
@@ -146,6 +165,7 @@ metals_config.init_options.statusBarProvider = "off"
 -- metals_config.init_options.statusBarProvider = "on"
 
 -- Example if you are using cmp how to make sure the correct capabilities for snippets are set
+--local capabilities = vim.lsp.protocol.make_client_capabilities()
 metals_config.capabilities = capabilities
 
 -- Debug settings if you're using nvim-dap
