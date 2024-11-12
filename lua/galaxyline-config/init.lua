@@ -136,7 +136,7 @@ local gl_icons = {
 }
 
 local statusline = {
-	path_enabled = false,
+	path_enabled = true,
 	path = "relative", -- absolute/relative
 }
 
@@ -605,7 +605,7 @@ if statusline.path_enabled then
 					return ""
 				end
 
-				if EcoVim.statusline.path == "relative" then
+				if statusline.path == "relative" then
 					local fname = vim.fn.expand("%:p")
 					return fname:gsub(vim.fn.getcwd() .. "/", "") .. " "
 				end

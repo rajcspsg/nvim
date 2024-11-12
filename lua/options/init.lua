@@ -51,6 +51,14 @@ let g:vimspector_bottombar_height = 15
 let g:vimspector_terminal_maxwidth = 70
 ]])
 
+-- yaml.nvim cmd
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved" }, {
+	pattern = { "*.yaml" },
+	callback = function()
+		vim.opt_local.winbar = require("yaml_nvim").get_yaml_key_and_value()
+	end,
+})
+
 -- parinfer options
 vim.cmd([[
 let g:parinfer_force_balance = v:true
