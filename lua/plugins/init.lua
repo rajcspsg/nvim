@@ -41,6 +41,13 @@ local plugins = {
 		end,
 	},
 	{
+		"tadmccorkle/markdown.nvim",
+		ft = "markdown", -- or 'event = "VeryLazy"'
+		opts = {
+			-- configuration here or empty for defaults
+		},
+	},
+	{
 		"kosayoda/nvim-lightbulb",
 		config = function()
 			require("nvim-lightbulb").setup({
@@ -69,6 +76,17 @@ local plugins = {
 			local sidebar = require("sidebar-nvim")
 			local opts = { open = false }
 			sidebar.setup(opts)
+		end,
+	},
+	{
+		"cuducos/yaml.nvim",
+		ft = { "yaml" }, -- optional
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"nvim-telescope/telescope.nvim", -- optional
+		},
+		config = function()
+			require("yaml_nvim").setup({ ft = { "yaml" } })
 		end,
 	},
 	{
