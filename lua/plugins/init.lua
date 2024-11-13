@@ -399,7 +399,7 @@ local plugins = {
 			"nvim-treesitter/nvim-treesitter",
 		},
 	},
-	{
+	--[[{
 		"SmiteshP/nvim-navic",
 		event = { "CursorMoved", "BufWinEnter", "BufFilePost" },
 		config = function()
@@ -422,7 +422,7 @@ local plugins = {
 			require("rajnvim.winbar")
 		end,
 		dependencies = "neovim/nvim-lspconfig",
-	},
+	},--]]
 	{
 		"stevearc/conform.nvim",
 		event = { "BufReadPre", "BufNewFile" },
