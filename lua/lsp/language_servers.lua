@@ -46,13 +46,15 @@ local langservers = {
 	"hls",
 	"html",
 	"jdtls",
-	"kotlin_language_server",
 	"lua_ls",
 	"metals",
 	"ocamlls",
 	"pylsp",
 	"lua_ls",
 	"ts_ls",
+	"yamllint",
+	"yamlfmt",
+	"yaml-language-server",
 	"vls",
 	"zls",
 }
@@ -113,6 +115,26 @@ require("lspconfig").elixirls.setup({
 	elixirLS = {
 		dialyzerEnabled = false,
 		fetchDeps = false,
+	},
+})
+
+require("lspconfig").yamlls.setup({
+	capabilities = capabilities,
+	on_attach = function(client, bufnr)
+		client.resolved_capabilities.document_formatting = true
+	end,
+	flags = {
+		debounce_text_changes = 200,
+	},
+	settings = {
+		yaml = {
+			format = {
+				enable = true,
+			},
+			schemaStore = {
+				enable = true,
+			},
+		},
 	},
 })
 
