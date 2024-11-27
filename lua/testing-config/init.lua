@@ -9,7 +9,6 @@ vim.diagnostic.config({
 }, neotest_ns)
 
 local m = vim.keymap.set
-local m = vim.keymap.set
 
 require("neotest").setup({
 	adapters = {
@@ -48,7 +47,9 @@ require("neotest").setup({
 				},
 			},
 		}),
-		require("neotest-go"),
+		require("neotest-go")({
+			recursive_run = true,
+		}),
 		-- require("neotest-golang"),
 		["neotest-golang"] = {
 			-- go_test_args = { "-v", "-race", "-count=1", "-timeout=60s" },
@@ -57,9 +58,17 @@ require("neotest").setup({
 		require("neotest-jest")({
 			jestCommand = "npm test --",
 			env = { CI = true },
-			cwd = function(path)
+			jest_test_discovery = true,
+			jestConfigFile = "jest.config.js",
+			cwd = function()
 				return vim.fn.getcwd()
 			end,
+		}),
+		require("neotest-scala"),
+		require("neotest-zig")({
+			dap = {
+				adapter = "lldb",
+			},
 		}),
 	},
 	consumers = {
@@ -78,6 +87,10 @@ require("neotest").setup({
 		"NeotestPlaywrightProject",
 		"NeotestPlaywrightPreset",
 		"NeotestPlaywrightRefresh",
+	},
+	config = {
+		output_panel = { open_on_run = true },
+		diagnostic = true,
 	},
 	--[[keys = {
 		m("<leader>m", "Neotest summary"),
@@ -197,3 +210,13 @@ require("neotest").setup({
 		},
 	},
 })
+
+vim.cmd([[
+command! NeotestSummary lua require("neotest").summary.toggle()
+command! NeotestFile lua require("neotest").run.run(vim.fn.expand("%"))
+command! Neotest lua require("neotest").run.run(vim.fn.getcwd())
+command! NeotestNearest lua require("neotest").run.run()
+command! NeotestDebug lua require("neotest").run.run({ strategy = "dap" })
+command! NeotestAttach lua require("neotest").run.attach()
+command! NeotestOutput lua require("neotest").output.open()
+]])
