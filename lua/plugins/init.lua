@@ -535,6 +535,20 @@ local plugins = {
       },
     },
   },
+{
+    "nvim-neotest/neotest",
+    dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-neotest/neotest-jest",
+            "marilari88/neotest-vitest",
+            "nvim-neotest/neotest-go",
+            "stevanmilic/neotest-scala",
+            "thenbe/neotest-playwright",
+    },
+},
 }
 
 local opts = {}
