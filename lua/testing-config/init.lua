@@ -12,6 +12,14 @@ local m = vim.keymap.set
 
 require("neotest").setup({
 	adapters = {
+		require("neotest-haskell")({
+			frameworks = {
+				{ framework = "tasty", modules = { "Test.Tasty", "MyTestModule" } },
+				"hspec",
+				"sydtest",
+			},
+		}),
+		require("rustaceanvim.neotest")({}),
 		require("neotest-vitest")({
 			filter_dir = function(name)
 				return name ~= "node_modules" and name:find("e2e") == nil
