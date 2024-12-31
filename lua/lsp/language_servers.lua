@@ -38,6 +38,7 @@ local langservers = {
 	"clojure_lsp",
 	"cmake",
 	"cssls",
+	"dhall_lsp_server",
 	"elixirls",
 	"emmet_ls",
 	"golangci_lint_ls",
@@ -48,9 +49,9 @@ local langservers = {
 	"jdtls",
 	"lua_ls",
 	"metals",
+	"nixd",
 	"ocamlls",
 	"pylsp",
-	"lua_ls",
 	"ts_ls",
 	"vls",
 	"zls",
@@ -117,9 +118,6 @@ require("lspconfig").elixirls.setup({
 
 require("lspconfig").yamlls.setup({
 	capabilities = capabilities,
-	on_attach = function(client, bufnr)
-		client.resolved_capabilities.document_formatting = true
-	end,
 	flags = {
 		debounce_text_changes = 200,
 	},
@@ -177,7 +175,76 @@ local custom_attach = function(client)
 	vim.keymap.set("n", "<leader>hq", ht.repl.quit, opts)
 end
 
-require("lspconfig").hls.setup({ on_attach = custom_attach })
+--require("lspconfig").hls.setup({ on_attach = custom_attach })
+--[[ require("lspconfig").hls.setup({
+	default_config = {
+		cmd = { "haskell-language-server-wrapper", "--lsp" },
+		filetypes = { "haskell", "lhaskell" },
+		root_dir = function(filepath)
+			return (
+				require("lspconfig.util").root_pattern("hie.yaml", "stack.yaml", "cabal.project")(filepath)
+				or require("lspconfig.util").root_pattern("*.cabal", "package.yaml")(filepath)
+			)
+		end,
+		single_file_support = true,
+		settings = {
+			haskell = {
+				formattingProvider = "ormolu",
+				cabalFormattingProvider = "cabalfmt",
+			},
+		},
+		lspinfo = function(cfg)
+			local extra = {}
+			local function on_stdout(_, data, _)
+				local version = data[1]
+				table.insert(extra, "version:   " .. version)
+			end
+
+			local opts = {
+				cwd = cfg.cwd,
+				stdout_buffered = true,
+				on_stdout = on_stdout,
+			}
+			local chanid = vim.fn.jobstart({ cfg.cmd[1], "--version" }, opts)
+			vim.fn.jobwait({ chanid })
+			return extra
+		end,
+	},
+
+	docs = {
+		description = [[
+https://github.com/haskell/haskell-language-server
+
+Haskell Language Server
+
+If you are using HLS 1.9.0.0, enable the language server to launch on Cabal files as well:
+
+```lua
+require('lspconfig')['hls'].setup{
+  filetypes = { 'haskell', 'lhaskell', 'cabal' },
+}
+```
+    ]]
+--[[,
+
+		default_config = {
+			root_dir = [[
+function (filepath)
+  return (
+    util.root_pattern('hie.yaml', 'stack.yaml', 'cabal.project')(filepath)
+    or util.root_pattern('*.cabal', 'package.yaml')(filepath)
+  )
+end
+     ]]
+--[[],
+		},
+	},
+})
+ ]]
+--
+
+require("lspconfig").hls.setup({})
+require("lspconfig").dhall_lsp_server.setup({})
 
 local cmd = vim.cmd
 -- LSP
