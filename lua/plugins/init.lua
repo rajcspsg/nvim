@@ -370,11 +370,60 @@ local plugins = {
 				hoogle = { mode = "auto" },
 				hover = { enable = true },
 				definition = { hoogle_signature_fallback = true },
-				repl = { handler = "toggleterm" },
+				repl = { handler = "toggleterm", auto_focus = false },
 			},
 			dap = {
 				cmd = { "haskell-debug-adapter --hackage-version=0.0.33.0" },
 				auto_discover = true,
+			},
+			hls = {
+				-- for hls development
+				-- cmd = { 'cabal', 'run', 'haskell-language-server' },
+
+				-- local keymap_opts =
+
+				on_attach = function(_, bufnr, ht)
+					local telescope = require("telescope")
+
+					local desc = function(description)
+						return vim.tbl_extend(
+							"keep",
+							{ noremap = true, silent = true },
+							{ buffer = bufnr, desc = description }
+						)
+					end
+					vim.keymap.set("n", "gh", ht.hoogle.hoogle_signature, desc("haskell: [h]oogle signature search"))
+					vim.keymap.set(
+						"n",
+						"<space>tg",
+						telescope.extensions.ht.package_grep,
+						desc("haskell: [t]elescope package [g]rep")
+					)
+					vim.keymap.set(
+						"n",
+						"<space>th",
+						telescope.extensions.ht.package_hsgrep,
+						desc("haskell: [t]elescope package grep [h]askell files")
+					)
+					vim.keymap.set(
+						"n",
+						"<space>tf",
+						telescope.extensions.ht.package_files,
+						desc("haskell: [t]elescope package [f]iles")
+					)
+					vim.keymap.set("n", "<space>ea", ht.lsp.buf_eval_all, desc("haskell: [e]valuate [a]ll"))
+				end,
+				default_settings = {
+					haskell = {
+						formattingProvider = "stylish-haskell",
+						maxCompletions = 30,
+						plugin = {
+							semanticTokens = {
+								globalOn = true,
+							},
+						},
+					},
+				},
 			},
 		},
 		config = function(_, opts)
