@@ -1,1 +1,2 @@
-require('go').setup({})
+require("go").setup({})
+require("lspconfig").gopls.setup({})
