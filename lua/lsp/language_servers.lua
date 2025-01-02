@@ -133,7 +133,7 @@ require("lspconfig").yamlls.setup({
 	},
 })
 
-require("lspconfig").rust_analyzer.setup({
+--[[require("lspconfig").rust_analyzer.setup({
 	capabilities = capabilities,
 	-- on_attach is a callback called when the language server attachs to the buffer
 	-- on_attach = on_attach,
@@ -147,7 +147,8 @@ require("lspconfig").rust_analyzer.setup({
 			},
 		},
 	},
-})
+})]]
+--
 
 local custom_attach = function(client)
 	print("LSP Started")

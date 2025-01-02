@@ -1,10 +1,121 @@
 local M = {}
+local root_markers = { "gradlew", "pom.xml" }
+local root_dir = require("jdtls.setup").find_root(root_markers)
+local home = os.getenv("HOME")
+
+local extendedClientCapabilities = require("jdtls").extendedClientCapabilities
+
+extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
+local java_cmds = vim.api.nvim_create_augroup("java_cmds", { clear = true })
+local runtimes = {
+	{
+		name = "JavaSE-11",
+		path = home .. "/.sdkman/candidates/java/11.0.7-amzn/",
+	},
+	{
+		name = "JavaSE-23",
+		path = home .. "/.sdkman/candidates/java/23.0.1.fx-zulu/",
+	},
+	{
+		name = "JavaSE-21",
+		path = home .. "/.sdkman/candidates/java/21.0.4-tem/",
+	},
+}
+
+local lsp_settings = {
+	java = {
+		eclipse = {
+			downloadSources = true,
+		},
+		configuration = {
+			updateBuildConfiguration = "interactive",
+			runtimes = runtimes,
+		},
+		maven = {
+			downloadSources = true,
+		},
+		implementationsCodeLens = {
+			enabled = true,
+		},
+		referencesCodeLens = {
+			enabled = true,
+		},
+		inlayHints = {
+			parameterNames = {
+				enabled = "all", -- literals, all, none
+			},
+		},
+		format = {
+			enabled = true,
+			settings = {
+				url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
+				profile = "GoogleStyle",
+			},
+		},
+		signatureHelp = {
+			enabled = true,
+		},
+		completion = {
+			favoriteStaticMembers = {
+				"org.hamcrest.MatcherAssert.assertThat",
+				"org.hamcrest.Matchers.*",
+				"org.hamcrest.CoreMatchers.*",
+				"org.junit.jupiter.api.Assertions.*",
+				"java.util.Objects.requireNonNull",
+				"java.util.Objects.requireNonNullElse",
+				"org.mockito.Mockito.*",
+			},
+			filteredTypes = {
+				"com.sun.*",
+				"io.micrometer.shaded.*",
+				"java.awt.*",
+				"jdk.*",
+				"sun.*",
+			},
+			guessMethodArguments = true,
+		},
+		contentProvider = {
+			preferred = "fernflower",
+		},
+		extendedClientCapabilities = extendedClientCapabilities,
+		sources = {
+			organizeImports = {
+				starThreshold = 9999,
+				staticStarThreshold = 9999,
+			},
+		},
+		codeGeneration = {
+			toString = {
+				template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
+			},
+			hashCodeEquals = {
+				useJava7Objects = true,
+			},
+			useBlocks = true,
+		},
+	},
+}
+
+local function enable_codelens(bufnr)
+	pcall(vim.lsp.codelens.refresh)
+
+	vim.api.nvim_create_autocmd("BufWritePost", {
+		buffer = bufnr,
+		group = java_cmds,
+		desc = "refresh codelens",
+		callback = function()
+			pcall(vim.lsp.codelens.refresh)
+		end,
+	})
+end
 
 function M.setup()
 	local on_attach = function(client, bufnr)
 		require("jdtls.setup").add_commands()
 		require("jdtls").setup_dap()
+		require("jdtls.dap").setup_dap_main_class_configs()
 		require("lsp-status").register_progress()
+		enable_codelens(bufnr)
 		require("compe").setup({
 			enabled = true,
 			autocomplete = true,
@@ -119,10 +230,6 @@ function M.setup()
 		)
 	end
 
-	local root_markers = { "gradlew", "pom.xml" }
-	local root_dir = require("jdtls.setup").find_root(root_markers)
-	local home = os.getenv("HOME")
-
 	local capabilities = {
 		workspace = {
 			configuration = true,
@@ -141,6 +248,7 @@ function M.setup()
 		flags = {
 			allow_incremental_sync = true,
 		},
+		settings = lsp_settings,
 		capabilities = capabilities,
 		on_attach = on_attach,
 	}
@@ -212,8 +320,6 @@ function M.setup()
 	--   end
 	-- end
 
-	local extendedClientCapabilities = require("jdtls").extendedClientCapabilities
-	extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
 	config.init_options = {
 		-- bundles = bundles;
 		extendedClientCapabilities = extendedClientCapabilities,

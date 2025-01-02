@@ -433,6 +433,16 @@ local plugins = {
 		end,
 	},
 	{
+		"mrcjkb/rustaceanvim",
+		version = "^5", -- Recommended
+		lazy = false, -- This plugin is already lazy
+		["rust-analyzer"] = {
+			cargo = {
+				allFeatures = true,
+			},
+		},
+	},
+	{
 		"julienvincent/clojure-test.nvim",
 		dependencies = {
 			"nvim-neotest/nvim-nio",
@@ -622,6 +632,256 @@ local plugins = {
 			"thenbe/neotest-playwright",
 			"lawrence-laz/neotest-zig",
 			"mrcjkb/neotest-haskell",
+		},
+	},
+	{
+		"saghen/blink.cmp",
+		-- lazy = false,
+		event = { "InsertEnter *", "CmdlineEnter *" },
+		enabled = true,
+		version = "*",
+		-- build = "cargo build --release",
+		cond = vim.g.completer == "blink",
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			{ "saghen/blink.compat", version = "*", opts = { impersonate_nvim_cmp = true } },
+			{ "chrisgrieser/cmp-nerdfont", lazy = true },
+			{ "hrsh7th/cmp-emoji", lazy = true },
+		},
+		opts = {
+			-- enabled = function()
+			--   -- prevent useless suggestions when typing `--` in lua, but keep the
+			--   -- `---@param;@return` suggestion
+			--   if vim.bo.ft == "lua" then
+			--     local col = vim.api.nvim_win_get_cursor(0)[2]
+			--     local charsBefore = vim.api.nvim_get_current_line():sub(col - 2, col)
+			--     local commentButNotLuadocs = charsBefore:find("^%-%-?$") or charsBefore:find("%s%-%-?")
+			--     if commentButNotLuadocs then return false end
+			--   end
+
+			--   if vim.bo.buftype == "prompt" then return false end
+			--   local ignoredFts = { "DressingInput", "snacks_input", "rip-substitute", "gitcommit" }
+			--   return not vim.tbl_contains(ignoredFts, vim.bo.filetype)
+			-- end,
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+				-- default = function(ctx)
+				--   -- local node = vim.treesitter.get_node()
+				--   -- if vim.bo.filetype == "lua" then
+				--   --   return { "lsp", "path" }
+				--   -- elseif node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
+				--   --   return { "buffer" }
+				--   -- else
+				--   return { "lsp", "path", "snippets", "buffer", "codecompanion", "lazydev", "copilot" }
+				--   -- end
+				-- end,
+				-- compat = { "supermaven" },
+				-- min_keyword_length = function()
+				--   --   return vim.bo.filetype == 'markdown' and 2 or 0
+				--   return 2
+				-- end,
+				-- cmdline = function()
+				--   local type = vim.fn.getcmdtype()
+				--   -- Search forward and backward
+				--   if type == "/" or type == "?" then return { "buffer" } end
+				--   -- Commands
+				--   if type == ":" then return { "cmdline" } end
+				--   return {}
+				-- end,
+				providers = {
+					lsp = {
+						name = "[lsp]",
+					},
+					snippets = {
+						name = "[snips]",
+						-- don't show when triggered manually (= length 0), useful
+						-- when manually showing completions to see available JSON keys
+						min_keyword_length = 2,
+						score_offset = -1,
+					},
+					path = { name = "[path]", opts = { get_cwd = vim.uv.cwd } },
+					-- copilot = {
+					--   name = "[copilot]",
+					--   module = "blink-cmp-copilot",
+					--   score_offset = 100,
+					--   async = true,
+					-- },
+					lazydev = {
+						name = "[lazy]",
+						module = "lazydev.integrations.blink",
+						score_offset = 100, -- show at a higher priority than lsp
+					},
+					markdown = { name = "[md]", module = "render-markdown.integ.blink" },
+					-- supermaven = { name = "[super]", kind = "Supermaven", module = "supermaven.cmp", score_offset = 100, async = true },
+					-- codecompanion = {
+					--   name = "codecompanion",
+					--   module = "codecompanion.providers.completion.blink",
+					--   enabled = true,
+					-- },
+					buffer = {
+						name = "[buf]",
+						-- disable being fallback for LSP, but limit its display via
+						-- the other settings
+						-- fallbacks = {},
+						max_items = 4,
+						min_keyword_length = 4,
+						score_offset = -3,
+
+						-- show completions from all buffers used within the last x minutes
+						opts = {
+							get_bufnrs = function()
+								local mins = 15
+								local allOpenBuffers = vim.fn.getbufinfo({ buflisted = 1, bufloaded = 1 })
+								local recentBufs = vim.iter(allOpenBuffers)
+									:filter(function(buf)
+										local recentlyUsed = os.time() - buf.lastused < (60 * mins)
+										local nonSpecial = vim.bo[buf.bufnr].buftype == ""
+										return recentlyUsed and nonSpecial
+									end)
+									:map(function(buf)
+										return buf.bufnr
+									end)
+									:totable()
+								return recentBufs
+							end,
+						},
+					},
+				},
+			},
+			keymap = {
+				["<C-c>"] = { "cancel" },
+				["<C-y>"] = { "select_and_accept", "fallback" },
+				["<CR>"] = { "accept", "fallback" },
+				["<Tab>"] = { "select_next", "fallback" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<Down>"] = { "select_next", "fallback" },
+				["<Up>"] = { "select_prev", "fallback" },
+				["<PageDown>"] = { "scroll_documentation_down" },
+				["<PageUp>"] = { "scroll_documentation_up" },
+			},
+			signature = { enabled = true },
+			completion = {
+				-- ghost_text = {
+				--   enabled = true,
+				-- },
+				-- enabled_providers = function(_)
+				--   -- if vim.bo.filetype == "codecompanion" then return { "codecompanion" } end
+
+				--   return { "lsp", "path", "snippets", "buffer", "markdown", "supermaven", "codecompanion" }
+				-- end,
+				list = {
+					cycle = { from_top = false }, -- cycle at bottom, but not at the top
+					selection = "manual", -- alts: auto_insert, preselect
+				},
+				accept = {
+					auto_brackets = {
+						-- Whether to auto-insert brackets for functions
+						enabled = true,
+						-- Default brackets to use for unknown languages
+						default_brackets = { "(", ")" },
+						-- Overrides the default blocked filetypes
+						override_brackets_for_filetypes = { "rust", "elixir", "heex", "lua" },
+						-- Synchronously use the kind of the item to determine if brackets should be added
+						kind_resolution = {
+							enabled = true,
+							blocked_filetypes = { "typescriptreact", "javascriptreact", "vue" },
+						},
+						-- Asynchronously use semantic token to determine if brackets should be added
+						semantic_token_resolution = {
+							enabled = true,
+							blocked_filetypes = {},
+							-- How long to wait for semantic tokens to return before assuming no brackets should be added
+							timeout_ms = 400,
+						},
+					},
+				},
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 250,
+					window = {
+						border = { " ", " ", " ", " ", " ", " ", " ", " " },
+						max_width = 50,
+						max_height = 15,
+					},
+				},
+				menu = {
+					border = { " ", " ", " ", " ", " ", " ", " ", " " },
+					draw = {
+						treesitter = { "lsp" },
+						columns = {
+							{ "label", "label_description", gap = 1 },
+							{ "kind_icon", "kind", gap = 1 },
+							{ "source_name" },
+						},
+						components = {
+							label = { width = { max = 30, fill = true } }, -- more space for doc-win
+							label_description = { width = { max = 20 } },
+							kind_icon = {
+								text = function(ctx)
+									-- detect emmet-ls
+									local source, client = ctx.item.source_id, ctx.item.client_id
+									local lspName = client and vim.lsp.get_client_by_id(client).name
+									if lspName == "emmet_language_server" then
+										source = "emmet"
+									end
+
+									-- use source-specific icons, and `kind_icon` only for items from LSPs
+									local sourceIcons =
+										{ snippets = "󰩫", buffer = "󰦨", emmet = "", path = "" }
+									return sourceIcons[source] or ctx.kind_icon
+								end,
+							},
+							source_name = {
+								width = { max = 30, fill = true },
+								text = function(ctx)
+									if ctx.item.source_id == "lsp" then
+										local client = vim.lsp.get_client_by_id(ctx.item.client_id)
+										if client ~= nil then
+											return string.format("[%s]", client.name)
+										end
+										return ctx.source_name
+									end
+
+									return ctx.source_name
+								end,
+								highlight = "BlinkCmpSource",
+							},
+						},
+					},
+				},
+			},
+			appearance = {
+				use_nvim_cmp_as_default = true,
+				nerd_font_variant = "mono",
+				kind_icons = {
+					-- different icons of the corresponding source
+					Text = "󰦨", -- `buffer`
+					Snippet = "󰞘", -- `snippets`
+					File = "", -- `path`
+					Folder = "󰉋",
+					Method = "󰊕",
+					Function = "󰡱",
+					Constructor = "",
+					Field = "󰇽",
+					Variable = "󰀫",
+					Class = "󰜁",
+					Interface = "",
+					Module = "",
+					Property = "󰜢",
+					Unit = "",
+					Value = "󰎠",
+					Enum = "",
+					Keyword = "󰌋",
+					Color = "󰏘",
+					Reference = "",
+					EnumMember = "",
+					Constant = "󰏿",
+					Struct = "󰙅",
+					Event = "",
+					Operator = "󰆕",
+					TypeParameter = "󰅲",
+				},
+			},
 		},
 	},
 }
