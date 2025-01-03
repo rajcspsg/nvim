@@ -46,7 +46,6 @@ local langservers = {
 	"gradle_ls",
 	"hls",
 	"html",
-	"jdtls",
 	"lua_ls",
 	"metals",
 	"nixd",
@@ -247,6 +246,7 @@ end
 require("lspconfig").hls.setup({})
 require("lspconfig").dhall_lsp_server.setup({})
 
+require("go").setup({})
 local cmd = vim.cmd
 -- LSP
 cmd([[augroup lsp]])
@@ -261,7 +261,7 @@ cmd([[augroup end]])
 ----------------------------------
 -- LSP Setup ---------------------
 ----------------------------------
-metals_config = require("metals").bare_config()
+local metals_config = require("metals").bare_config()
 
 -- Example of settings
 metals_config.settings = {

@@ -346,8 +346,27 @@ local plugins = {
 	},
 	{
 		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
 	},
+	-- Auto-Install LSPs, linters, formatters, debuggers
+	-- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
+	{
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		opts = {
+			--[[ensure_installed = {
+				"java-debug-adapter",
+				"java-test",
+				"gofumpt",
+				"golines",
+				"gomodifytags",
+				"gotests",
+				"impl",
+				"json-to-struct",
+			},]]
+			--
+		},
+	},
+
+	"neovim/nvim-lspconfig",
 	{
 		"mrcjkb/rustaceanvim",
 		version = "^5", -- Recommended
