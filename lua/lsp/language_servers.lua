@@ -1,21 +1,21 @@
 -- Setup lspconfig.
 local vim_capabilities = vim.lsp.protocol.make_client_capabilities()
 vim_capabilities.textDocument.completion.completionItem = {
-	documentationFormat = { "markdown", "plaintext" },
-	snippetSupport = true,
-	preselectSupport = true,
-	insertReplaceSupport = true,
-	labelDetailsSupport = true,
-	deprecatedSupport = true,
-	commitCharactersSupport = true,
-	tagSupport = { valueSet = { 1 } },
-	resolveSupport = {
-		properties = {
-			"documentation",
-			"detail",
-			"additionalTextEdits",
-		},
-	},
+  documentationFormat = { "markdown", "plaintext" },
+  snippetSupport = true,
+  preselectSupport = true,
+  insertReplaceSupport = true,
+  labelDetailsSupport = true,
+  deprecatedSupport = true,
+  commitCharactersSupport = true,
+  tagSupport = { valueSet = { 1 } },
+  resolveSupport = {
+    properties = {
+      "documentation",
+      "detail",
+      "additionalTextEdits",
+    },
+  },
 }
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim_capabilities)
@@ -23,113 +23,190 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities(vim_capabiliti
 local lspconfig = require("lspconfig")
 
 lspconfig.ls_emmet = {
-	default_config = {
-		cmd = { "ls_emmet", "--stdio" },
-		filetypes = { "html", "css", "scss" }, -- Add the languages you use, see language support
-		root_dir = function(_)
-			return vim.loop.cwd()
-		end,
-		settings = {},
-	},
+  default_config = {
+    cmd = { "ls_emmet", "--stdio" },
+    filetypes = { "html", "css", "scss" }, -- Add the languages you use, see language support
+    root_dir = function(_)
+      return vim.loop.cwd()
+    end,
+    settings = {},
+  },
 }
 
 local langservers = {
-	"clangd",
-	"clojure_lsp",
-	"cmake",
-	"cssls",
-	"dhall_lsp_server",
-	"elixirls",
-	"emmet_ls",
-	"golangci_lint_ls",
-	"gopls",
-	"gradle_ls",
-	"hls",
-	"html",
-	"lua_ls",
-	"metals",
-	"nixd",
-	"ocamlls",
-	"pylsp",
-	"ts_ls",
-	"vls",
-	"zls",
+  "clangd",
+  "clojure_lsp",
+  "cmake",
+  "cssls",
+  "dhall_lsp_server",
+  "elixirls",
+  "emmet_ls",
+  "golangci_lint_ls",
+  "gopls",
+  "gradle_ls",
+  "hls",
+  "html",
+  "lua_ls",
+  "metals",
+  "nixd",
+  "ocamlls",
+  "pylsp",
+  "ts_ls",
+  "vls",
+  "zls",
 }
 
 for _, server in ipairs(langservers) do
-	require("lspconfig")[server].setup({ capabilities = capabilities })
+  lspconfig[server].setup({ capabilities = capabilities })
 end
 
-require("lspconfig").lua_ls.setup({
+lspconfig.lua_ls.setup({
 
-	on_init = function(client, _)
-		if client.supports_method("textDocument/semanticTokens") then
-			client.server_capabilities.semanticTokensProvider = nil
-		end
-	end,
+  on_init = function(client, _)
+    if client.supports_method("textDocument/semanticTokens") then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  end,
 
-	capabilities = capabilities,
+  capabilities = capabilities,
 
-	settings = {
+  settings = {
 
-		Lua = {
+    Lua = {
 
-			diagnostics = {
+      diagnostics = {
 
-				globals = { "vim" },
-			},
+        globals = { "vim" },
+      },
 
-			workspace = {
+      workspace = {
 
-				library = {
+        library = {
 
-					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+          [vim.fn.expand("$VIMRUNTIME/lua")] = true,
 
-					[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+          [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
 
-					[vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
+          [vim.fn.stdpath("data") .. "/lazy/ui/nvchad_types"] = true,
 
-					[vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
-				},
+          [vim.fn.stdpath("data") .. "/lazy/lazy.nvim/lua/lazy"] = true,
+        },
 
-				maxPreload = 100000,
+        maxPreload = 100000,
 
-				preloadFileSize = 10000,
-			},
-		},
-	},
+        preloadFileSize = 10000,
+      },
+    },
+  },
+})
+
+lspconfig.gopls.setup({
+  capabilities = vim.tbl_deep_extend(
+    "force", {}, capabilities, lspconfig.gopls.capabilities or {}
+  ),
+  settings = {
+    gopls = {
+      analyses = {
+        fieldalignment = false, -- find structs that would use less memory if their fields were sorted
+        nilness = true,
+        unusedparams = true,
+        unusedwrite = true,
+        useany = true
+      },
+      codelenses = {
+        gc_details = false,
+        generate = true,
+        regenerate_cgo = true,
+        run_govulncheck = true,
+        test = true,
+        tidy = true,
+        upgrade_dependency = true,
+        vendor = true,
+      },
+      experimentalPostfixCompletions = true,
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true
+      },
+      gofumpt = true,
+      semanticTokens = true,
+      -- DISABLED: staticcheck
+      --
+      -- gopls doesn't invoke the staticcheck binary.
+      -- Instead it imports the analyzers directly.
+      -- This means it can report on issues the binary can't.
+      -- But it's not a good thing (like it initially sounds).
+      -- You can't then use line directives to ignore issues.
+      --
+      -- Instead of using staticcheck via gopls.
+      -- We have golangci-lint execute it instead.
+      --
+      -- For more details:
+      -- https://github.com/golang/go/issues/36373#issuecomment-570643870
+      -- https://github.com/golangci/golangci-lint/issues/741#issuecomment-1488116634
+      --
+      -- staticcheck = true,
+      usePlaceholders = true,
+    }
+  },
+  on_attach = function(client, bufnr)
+    require("lsp-inlayhints").setup({
+      inlay_hints = {
+        parameter_hints = { prefix = "in: " },
+        type_hints = { prefix = "out: " } --
+      }
+    })
+    require("lsp-inlayhints").on_attach(client, bufnr)
+    require("illuminate").on_attach(client)
+    if not client.server_capabilities.semanticTokensProvider then
+      local semantic = client.config.capabilities.textDocument.semanticTokens
+      client.server_capabilities.semanticTokensProvider = {
+        full = true,
+        legend = {
+          tokenTypes = semantic.tokenTypes,
+          tokenModifiers = semantic.tokenModifiers,
+        },
+        range = true,
+      }
+    end
+  end,
 })
 
 -- Configure ElixirLS as the LSP server for Elixir.
-require("lspconfig").elixirls.setup({
-	-- cmd = { "/opt/homebrew/Cellar/elixir-ls/0.13.0/bin/elixir-ls" },
-	cmd = { "elixir-ls" },
-	-- on_attach = custom_attach, -- this may be required for extended functionalities of the LSP
-	capabilities = capabilities,
-	flags = {
-		debounce_text_changes = 150,
-	},
-	elixirLS = {
-		dialyzerEnabled = false,
-		fetchDeps = false,
-	},
+lspconfig.elixirls.setup({
+  -- cmd = { "/opt/homebrew/Cellar/elixir-ls/0.13.0/bin/elixir-ls" },
+  cmd = { "elixir-ls" },
+  -- on_attach = custom_attach, -- this may be required for extended functionalities of the LSP
+  capabilities = capabilities,
+  flags = {
+    debounce_text_changes = 150,
+  },
+  elixirLS = {
+    dialyzerEnabled = false,
+    fetchDeps = false,
+  },
 })
 
-require("lspconfig").yamlls.setup({
-	capabilities = capabilities,
-	flags = {
-		debounce_text_changes = 200,
-	},
-	settings = {
-		yaml = {
-			format = {
-				enable = true,
-			},
-			schemaStore = {
-				enable = true,
-			},
-		},
-	},
+lspconfig.yamlls.setup({
+  capabilities = capabilities,
+  flags = {
+    debounce_text_changes = 200,
+  },
+  settings = {
+    yaml = {
+      format = {
+        enable = true,
+      },
+      schemaStore = {
+        enable = true,
+      },
+    },
+  },
 })
 
 --[[require("lspconfig").rust_analyzer.setup({
@@ -150,29 +227,29 @@ require("lspconfig").yamlls.setup({
 --
 
 local custom_attach = function(client)
-	print("LSP Started")
-	-- require('completion').on_attach(client)
-	-- require('diagnostic').on_attach(client)
+  print("LSP Started")
+  -- require('completion').on_attach(client)
+  -- require('diagnostic').on_attach(client)
 
-	print("attched")
-	local ht = require("haskell-tools")
-	local bufnr = vim.api.nvim_get_current_buf()
-	local opts = { noremap = true, silent = true, buffer = bufnr }
-	print("haskell tools keymaps setup")
-	-- haskell-language-server relies heavily on codeLenses,
-	-- so auto-refresh (see advanced configuration) is enabled by default
-	vim.keymap.set("n", "<space>cl", vim.lsp.codelens.run, opts)
-	-- Hoogle search for the type signature of the definition under the cursor
-	vim.keymap.set("n", "<space>hs", ht.hoogle.hoogle_signature, opts)
-	-- Evaluate all code snippets
-	vim.keymap.set("n", "<space>ea", ht.lsp.buf_eval_all, opts)
-	-- Toggle a GHCi repl for the current package
-	vim.keymap.set("n", "<leader>hr", ht.repl.toggle, opts)
-	-- Toggle a GHCi repl for the current buffer
-	vim.keymap.set("n", "<leader>hf", function()
-		ht.repl.toggle(vim.api.nvim_buf_get_name(0))
-	end, opts)
-	vim.keymap.set("n", "<leader>hq", ht.repl.quit, opts)
+  print("attched")
+  local ht = require("haskell-tools")
+  local bufnr = vim.api.nvim_get_current_buf()
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+  print("haskell tools keymaps setup")
+  -- haskell-language-server relies heavily on codeLenses,
+  -- so auto-refresh (see advanced configuration) is enabled by default
+  vim.keymap.set("n", "<space>cl", vim.lsp.codelens.run, opts)
+  -- Hoogle search for the type signature of the definition under the cursor
+  vim.keymap.set("n", "<space>hs", ht.hoogle.hoogle_signature, opts)
+  -- Evaluate all code snippets
+  vim.keymap.set("n", "<space>ea", ht.lsp.buf_eval_all, opts)
+  -- Toggle a GHCi repl for the current package
+  vim.keymap.set("n", "<leader>hr", ht.repl.toggle, opts)
+  -- Toggle a GHCi repl for the current buffer
+  vim.keymap.set("n", "<leader>hf", function()
+    ht.repl.toggle(vim.api.nvim_buf_get_name(0))
+  end, opts)
+  vim.keymap.set("n", "<leader>hq", ht.repl.quit, opts)
 end
 
 --require("lspconfig").hls.setup({ on_attach = custom_attach })
@@ -243,10 +320,9 @@ end
  ]]
 --
 
-require("lspconfig").hls.setup({})
-require("lspconfig").dhall_lsp_server.setup({})
+lspconfig.hls.setup({})
+lspconfig.dhall_lsp_server.setup({})
 
-require("go").setup({})
 local cmd = vim.cmd
 -- LSP
 cmd([[augroup lsp]])
@@ -265,10 +341,10 @@ local metals_config = require("metals").bare_config()
 
 -- Example of settings
 metals_config.settings = {
-	showImplicitArguments = true,
-	showImplicitConversionsAndClasses = true,
-	showInferredType = true,
-	excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
+  showImplicitArguments = true,
+  showImplicitConversionsAndClasses = true,
+  showInferredType = true,
+  excludedPackages = { "akka.actor.typed.javadsl", "com.github.swagger.akka.javadsl" },
 }
 
 metals_config.init_options.statusBarProvider = "off"
@@ -287,40 +363,40 @@ metals_config.capabilities = capabilities
 -- Debug settings if you're using nvim-dap
 local dap = require("dap")
 dap.configurations.scala = {
-	{
-		type = "scala",
-		request = "launch",
-		name = "RunOrTest",
-		metals = {
-			runType = "runOrTestFile",
-			--args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
-		},
-	},
-	{
-		type = "scala",
-		request = "launch",
-		name = "Test Target",
-		metals = {
-			runType = "testTarget",
-		},
-	},
+  {
+    type = "scala",
+    request = "launch",
+    name = "RunOrTest",
+    metals = {
+      runType = "runOrTestFile",
+      --args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
+    },
+  },
+  {
+    type = "scala",
+    request = "launch",
+    name = "Test Target",
+    metals = {
+      runType = "testTarget",
+    },
+  },
 }
 
 metals_config.on_attach = function(client, bufnr)
-	require("metals").setup_dap()
+  require("metals").setup_dap()
 end
 
 -- Autocmd that will actually be in charging of starting the whole thing
 local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
 vim.api.nvim_create_autocmd("FileType", {
-	-- NOTE: You may or may not want java included here. You will need it if you
-	-- want basic Java support but it may also conflict if you are using
-	-- something like nvim-jdtls which also works on a java filetype autocmd.
-	pattern = { "scala", "sbt" },
-	callback = function()
-		require("metals").initialize_or_attach(metals_config)
-	end,
-	group = nvim_metals_group,
+  -- NOTE: You may or may not want java included here. You will need it if you
+  -- want basic Java support but it may also conflict if you are using
+  -- something like nvim-jdtls which also works on a java filetype autocmd.
+  pattern = { "scala", "sbt" },
+  callback = function()
+    require("metals").initialize_or_attach(metals_config)
+  end,
+  group = nvim_metals_group,
 })
 
 -- If you want a :Format command this is useful

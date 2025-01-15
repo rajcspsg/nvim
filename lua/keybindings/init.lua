@@ -1,5 +1,5 @@
 vim.g.mapleader = " "
-vim.g.maplocalleader = ","
+vim.g.maplocalleader = "<C-/>"
 vim.g.sexp_filetypes = "clojure,scheme,lisp,racket,fennel,janet"
 local map = vim.keymap.set
 
@@ -29,10 +29,10 @@ map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", {})
 map("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", {})
 map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", {})
 map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>', {})
-map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]], {}) -- all workspace diagnostics
+map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]], {})                 -- all workspace diagnostics
 map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]], {}) -- all workspace errors
 map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]], {}) -- all workspace warnings
-map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>", {}) -- buffer diagnostics only
+map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>", {})                   -- buffer diagnostics only
 map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>", {})
 map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>", {})
 
@@ -68,3 +68,19 @@ map("n", "<leader>Rp", ":RunProject<CR>", { noremap = true, silent = false })
 map("n", "<leader>Rc", ":RunClose<CR>", { noremap = true, silent = false })
 map("n", "<leader>Crf", ":CRFiletype<CR>", { noremap = true, silent = false })
 map("n", "<leader>Crp", ":CRProjects<CR>", { noremap = true, silent = false })
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.go",
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { "source.organizeImports" } }
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 1000)
+    for _, res in pairs(result or {}) do
+      for _, action in pairs(res.result or {}) do
+        if action.edit then
+          vim.lsp.util.apply_workspace_edit(action.edit, "utf-8")
+        end
+      end
+    end
+  end,
+})
