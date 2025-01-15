@@ -1,106 +1,76 @@
 local neotest_ns = vim.api.nvim_create_namespace("neotest")
 vim.diagnostic.config({
-	virtual_text = {
-		format = function(diagnostic)
-			local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-			return message
-		end,
-	},
+  virtual_text = {
+    format = function(diagnostic)
+      local message = diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+      return message
+    end,
+  },
 }, neotest_ns)
 
 local m = vim.keymap.set
 
 require("neotest").setup({
-	adapters = {
-		require("neotest-haskell")({
-			frameworks = {
-				{ framework = "tasty", modules = { "Test.Tasty", "MyTestModule" } },
-				"hspec",
-				"sydtest",
-			},
-		}),
-		require("rustaceanvim.neotest")({}),
-		require("neotest-vitest")({
-			filter_dir = function(name)
-				return name ~= "node_modules" and name:find("e2e") == nil
-			end,
-			is_test_file = function(path)
-				local test = u.find_path(path, "src/.*/__tests__/.*%.test%.[jt]s$")
-				local snapshot = u.find_path(path, "src/.*/__snapshots__")
-				return test and not snapshot
-			end,
-		}),
-		require("neotest-playwright").adapter({
-			options = {
-				persist_project_selection = true,
-				enable_dynamic_test_discovery = true,
-				is_test_file = function(path)
-					local test = u.find_path(path, "e2e/tests/.*%.test%.[jt]s$")
-					return test
-				end,
-				experimental = {
-					telescope = {
-						enabled = true,
-						opts = {
-							layout_strategy = "vertical",
-							layout_config = {
-								width = 0.25,
-								height = 0.25,
-								vertical = {
-									prompt_position = "bottom",
-								},
-							},
-						},
-					},
-				},
-			},
-		}),
-		require("neotest-go")({
-			recursive_run = true,
-		}),
-		-- require("neotest-golang"),
-		["neotest-golang"] = {
-			-- go_test_args = { "-v", "-race", "-count=1", "-timeout=60s" },
-			dap_go_enabled = true,
-		},
-		require("neotest-jest")({
-			jestCommand = "npm test --",
-			env = { CI = true },
-			jest_test_discovery = true,
-			jestConfigFile = "jest.config.js",
-			cwd = function()
-				return vim.fn.getcwd()
-			end,
-		}),
-		require("neotest-scala"),
-		require("neotest-zig")({
-			dap = {
-				adapter = "lldb",
-			},
-		}),
-	},
-	consumers = {
-		playwright = require("neotest-playwright.consumers").consumers,
-	},
-	quickfix = {
-		enabled = true,
-		open = false,
-	},
-	output = {
-		enabled = true,
-		open_on_run = "short",
-	},
-	cmd = {
-		"Neotest",
-		"NeotestPlaywrightProject",
-		"NeotestPlaywrightPreset",
-		"NeotestPlaywrightRefresh",
-	},
-	config = {
-		output_panel = { open_on_run = true },
-		diagnostic = true,
-	},
-	--[[keys = {
+  adapters = {
+    require("neotest-haskell")({
+      frameworks = {
+        { framework = "tasty", modules = { "Test.Tasty", "MyTestModule" } },
+        "hspec",
+        "sydtest",
+      },
+    }),
+    ["neotest-java"] = {
+      -- config here
+    },
+    require("rustaceanvim.neotest")({}),
+
+    require("neotest-playwright").adapter({}),
+    require("neotest-go")({
+      recursive_run = true,
+    }),
+    -- require("neotest-golang"),
+    ["neotest-golang"] = {
+      -- go_test_args = { "-v", "-race", "-count=1", "-timeout=60s" },
+      dap_go_enabled = true,
+    },
+    require("neotest-jest")({
+      jestCommand = "npm test --",
+      env = { CI = true },
+      jest_test_discovery = true,
+      jestConfigFile = "jest.config.js",
+      cwd = function()
+        return vim.fn.getcwd()
+      end,
+    }),
+    require("neotest-scala"),
+    require("neotest-zig")({
+      dap = {
+        adapter = "lldb",
+      },
+    }),
+  },
+  consumers = {
+    playwright = require("neotest-playwright.consumers").consumers,
+  },
+  quickfix = {
+    enabled = true,
+    open = false,
+  },
+  output = {
+    enabled = true,
+    open_on_run = "short",
+  },
+  cmd = {
+    "Neotest",
+    "NeotestPlaywrightProject",
+    "NeotestPlaywrightPreset",
+    "NeotestPlaywrightRefresh",
+  },
+  config = {
+    output_panel = { open_on_run = true },
+    diagnostic = true,
+  },
+  --[[keys = {
 		m("<leader>m", "Neotest summary"),
 		m("<leader>M", function()
 			vim.cmd("NeotestPlaywrightRefresh")
@@ -148,75 +118,75 @@ require("neotest").setup({
 		end),
 	},
   ]]
-	--
-	diagnostic = {
-		enabled = false,
-	},
-	floating = {
-		border = "rounded",
-		max_height = 0.6,
-		max_width = 0.6,
-	},
-	highlights = {
-		adapter_name = "NeotestAdapterName",
-		border = "NeotestBorder",
-		dir = "NeotestDir",
-		expand_marker = "NeotestExpandMarker",
-		failed = "NeotestFailed",
-		file = "NeotestFile",
-		focused = "NeotestFocused",
-		indent = "NeotestIndent",
-		namespace = "NeotestNamespace",
-		passed = "NeotestPassed",
-		running = "NeotestRunning",
-		skipped = "NeotestSkipped",
-		test = "NeotestTest",
-	},
-	icons = {
-		child_indent = "│",
-		child_prefix = "├",
-		collapsed = "─",
-		expanded = "╮",
-		failed = "✖",
-		final_child_indent = " ",
-		final_child_prefix = "╰",
-		non_collapsible = "─",
-		passed = "✔",
-		running = "",
-		skipped = "ﰸ",
-		unknown = "?",
-	},
-	output = {
-		enabled = true,
-		open_on_run = true,
-	},
-	run = {
-		enabled = true,
-	},
-	status = {
-		enabled = true,
-	},
-	strategies = {
-		integrated = {
-			height = 40,
-			width = 120,
-		},
-	},
-	summary = {
-		enabled = true,
-		expand_errors = true,
-		follow = true,
-		mappings = {
-			attach = "a",
-			expand = { "<CR>", "<2-LeftMouse>" },
-			expand_all = "e",
-			jumpto = "i",
-			output = "o",
-			run = "r",
-			short = "O",
-			stop = "u",
-		},
-	},
+  --
+  diagnostic = {
+    enabled = false,
+  },
+  floating = {
+    border = "rounded",
+    max_height = 0.6,
+    max_width = 0.6,
+  },
+  highlights = {
+    adapter_name = "NeotestAdapterName",
+    border = "NeotestBorder",
+    dir = "NeotestDir",
+    expand_marker = "NeotestExpandMarker",
+    failed = "NeotestFailed",
+    file = "NeotestFile",
+    focused = "NeotestFocused",
+    indent = "NeotestIndent",
+    namespace = "NeotestNamespace",
+    passed = "NeotestPassed",
+    running = "NeotestRunning",
+    skipped = "NeotestSkipped",
+    test = "NeotestTest",
+  },
+  icons = {
+    child_indent = "│",
+    child_prefix = "├",
+    collapsed = "─",
+    expanded = "╮",
+    failed = "✖",
+    final_child_indent = " ",
+    final_child_prefix = "╰",
+    non_collapsible = "─",
+    passed = "✔",
+    running = "",
+    skipped = "ﰸ",
+    unknown = "?",
+  },
+  output = {
+    enabled = true,
+    open_on_run = true,
+  },
+  run = {
+    enabled = true,
+  },
+  status = {
+    enabled = true,
+  },
+  strategies = {
+    integrated = {
+      height = 40,
+      width = 120,
+    },
+  },
+  summary = {
+    enabled = true,
+    expand_errors = true,
+    follow = true,
+    mappings = {
+      attach = "a",
+      expand = { "<CR>", "<2-LeftMouse>" },
+      expand_all = "e",
+      jumpto = "i",
+      output = "o",
+      run = "r",
+      short = "O",
+      stop = "u",
+    },
+  },
 })
 
 vim.cmd([[
