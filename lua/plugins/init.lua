@@ -335,6 +335,7 @@ local plugins = {
         "haskell-debug-adapter",
         "haskell-lnaguage-server",
         "jdtls",
+        "java-test",
         "java-debug-adapter",
         "clj-kondo",
         "clojure-lsp",
