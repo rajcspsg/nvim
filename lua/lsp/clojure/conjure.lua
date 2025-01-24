@@ -8,14 +8,15 @@ local M = {
 local function set_repl_winbar()
   if vim.bo.filetype == "clojure" then
     vim.opt_local.winbar = ("%#winbarseparator#" ..
-        "%=" ..
-        "%#user.repl.winbar# " ..
-        "%{%v:lua.require'config.tools.nrepl-finder'.get_repl_status('no REPL')%}" ..
-        "%#user.repl.winbar# " .. "%#winbarseparator#")
+      "%=" ..
+      "%#user.repl.winbar# " ..
+      "%{%v:lua.require'config.tools.nrepl-finder'.get_repl_status('no REPL')%}" ..
+      "%#user.repl.winbar# " .. "%#winbarseparator#")
   end
 end
 
 M.config = function()
+  vim.g["conjure#log#strip_ansi_escape_sequences_line_limit"] = 0
   vim.g["conjure#mapping#doc_word"] = false
   vim.g["conjure#client#clojure#nrepl#connection#auto_repl#enabled"] = false
   vim.g["conjure#highlight#enabled"] = true
@@ -39,8 +40,8 @@ M.config = function()
         vim.defer_fn(function()
           vim.lsp.for_each_buffer_client(
             event.buf, function(_, client_id)
-            vim.lsp.buf_detach_client(event.buf, client_id)
-          end)
+              vim.lsp.buf_detach_client(event.buf, client_id)
+            end)
         end, 1000)
         vim.diagnostic.disable(event.buf)
       end
@@ -53,7 +54,21 @@ M.config = function()
       group = grp,
       pattern = "conjure-log-*",
       callback = function()
+        local buffer = vim.api.nvim_get_current_buf()
+        vim.diagnostic.enable(false, { bufnr = buffer })
         set_repl_winbar()
+        vim.keymap.set(
+          { "n", "v" },
+          "[c",
+          "<CMD>call search('^; -\\+$', 'bw')<CR>",
+          { silent = true, buffer = true, desc = "Jumps to the begining of previous evaluation output." }
+        )
+        vim.keymap.set(
+          { "n", "v" },
+          "]c",
+          "<CMD>call search('^; -\\+$', 'w')<CR>",
+          { silent = true, buffer = true, desc = "Jumps to the begining of next evaluation output." }
+        )
       end
     }
   )

@@ -237,7 +237,7 @@ local plugins = {
   { "folke/which-key.nvim" },
   {
     "nvim-telescope/telescope.nvim",
-    dependenciess = { "nvim-lua/plenary.nvim", "Marskey/telescope-sg" },
+    dependencies = { "nvim-lua/plenary.nvim", "Marskey/telescope-sg" },
   },
   {
     "Marskey/telescope-sg",
@@ -248,7 +248,15 @@ local plugins = {
   "hrsh7th/cmp-buffer",
   "hrsh7th/cmp-path",
   "hrsh7th/cmp-cmdline",
-  "hrsh7th/nvim-cmp",
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = { "PaterJason/cmp-conjure" },
+    opts = function(_, opts)
+      if type(opts.sources) == "table" then
+        vim.list_extend(opts.sources, { name = "clojure" })
+      end
+    end,
+  },
   "hrsh7th/cmp-nvim-lsp",
   "hrsh7th/cmp-vsnip",
   "hrsh7th/vim-vsnip",
@@ -378,7 +386,13 @@ local plugins = {
   "glepnir/dashboard-nvim",
   "mfussenegger/nvim-jdtls",
   { "scalameta/nvim-metals",    dependenciess = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap" } },
-  "mfussenegger/nvim-dap",
+  {
+    "mfussenegger/nvim-dap",
+    dependencies = {
+      -- Runs preLaunchTask / postDebugTask if present
+      { "stevearc/overseer.nvim", config = true },
+    },
+  },
   "gpanders/nvim-parinfer",
   "Olical/conjure",
   "PaterJason/cmp-conjure",
@@ -453,6 +467,28 @@ local plugins = {
       })
     end,
   },
+  {
+    "luc-tielen/telescope_hoogle",
+    ft = { "haskell", "lhaskell", "cabal", "cabalproject" },
+    dependencies = {
+      { "nvim-telescope/telescope.nvim" },
+    },
+    config = function()
+      local ok, telescope = pcall(require, "telescope")
+      if ok then
+        telescope.load_extension("hoogle")
+      end
+    end,
+  },
+  {
+    "mrcjkb/haskell-snippets.nvim",
+    dependencies = { "L3MON4D3/LuaSnip" },
+    ft = { "haskell", "lhaskell", "cabal", "cabalproject" },
+    config = function()
+      local haskell_snippets = require("haskell-snippets").all
+      require("luasnip").add_snippets("haskell", haskell_snippets, { key = "haskell" })
+    end,
+  },
   { "PaterJason/nvim-treesitter-sexp" },
   {
     "mrcjkb/rustaceanvim",
@@ -521,6 +557,7 @@ local plugins = {
       "nvim-treesitter/nvim-treesitter-context",
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
+
   },
   {
     "nvim-treesitter/playground",
@@ -1348,6 +1385,62 @@ local plugins = {
       require("treesorter").setup()
     end,
   },
+  {
+    "szw/vim-maximizer",
+    cmd = "MaximizerToggle",
+  },
+  {
+    "LiadOz/nvim-dap-repl-highlights",
+    config = true,
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    build = function()
+      if not require("nvim-treesitter.parsers").has_parser("dap_repl") then
+        vim.cmd(":TSInstall dap_repl")
+      end
+    end,
+  },
+  {
+    "leoluz/nvim-dap-go",
+    config = function()
+      require('dap-go').setup({
+        dap_configurations = {
+          {
+            type = "go",
+            name = "Debug (Build Flags)",
+            request = "launch",
+            program = "${file}",
+            buildFlags = require("dap-go").get_build_flags,
+          },
+          {
+            type = "go",
+            name = "Debug (Build Flags & Arguments)",
+            request = "launch",
+            program = "${file}",
+            args = require("dap-go").get_arguments,
+            buildFlags = require("dap-go").get_build_flags,
+          },
+        },
+      })
+    end
+  },
+  {
+    "m00qek/baleia.nvim",
+    opts = {
+      line_starts_at = 3,
+    },
+    config = function(_, opts)
+      vim.g.conjure_baleia = require("baleia").setup(opts)
+
+      vim.api.nvim_create_user_command("BaleiaColorize", function()
+        vim.g.conjure_baleia.once(vim.api.nvim_get_current_buf())
+      end, { bang = true })
+
+      vim.api.nvim_create_user_command("BaleiaLogs", vim.g.conjure_baleia.logger.show, { bang = true })
+    end,
+  }
 }
 
 local opts = {}

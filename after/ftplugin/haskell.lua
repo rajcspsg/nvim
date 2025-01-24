@@ -1,6 +1,6 @@
 -- ~/.config/nvim/after/ftplugin/haskell.lua
 local ht = require("haskell-tools")
-local bufnr = vim.api.nvim_get_current_buf()
+local bufnr = vim.api.nvim_get_current_buf() or 0
 local opts = { noremap = true, silent = true, buffer = bufnr }
 -- haskell-language-server relies heavily on codeLenses,
 -- so auto-refresh (see advanced configuration) is enabled by default
@@ -13,6 +13,6 @@ vim.keymap.set("n", "<space>ea", ht.lsp.buf_eval_all, opts)
 vim.keymap.set("n", "<leader>rr", ht.repl.toggle, opts)
 -- Toggle a GHCi repl for the current buffer
 vim.keymap.set("n", "<leader>rf", function()
-	ht.repl.toggle(vim.api.nvim_buf_get_name(0))
+  ht.repl.toggle(vim.api.nvim_buf_get_name(0))
 end, opts)
 vim.keymap.set("n", "<leader>rq", ht.repl.quit, opts)
