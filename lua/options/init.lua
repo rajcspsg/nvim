@@ -24,6 +24,8 @@ vim.o.sidescrolloff = 5
 vim.o.mouse = "a"
 vim.wo.wrap = false
 vim.wo.number = true
+vim.opt.relativenumber = true
+vim.opt.signcolumn = "number"
 vim.o.cursorline = true
 vim.wo.signcolumn = "yes"
 vim.o.tabstop = 2
@@ -39,7 +41,7 @@ vim.wo.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 --vim.opt_global.shortmess:remove("F"):append("c")
 vim.opt_global.completeopt = { "menu", "menuone", "noinsert", "noselect" }
-vim.api.nvim_set_option("updatetime", 300)
+vim.api.nvim_set_option_value("updatetime", 300, {})
 vim.cmd([[
 set signcolumn=yes
 autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })

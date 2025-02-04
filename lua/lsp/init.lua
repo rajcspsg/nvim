@@ -1,7 +1,0 @@
-require("lsp/cmp")
-require("lsp/diagnostic_signs")
-require("lsp/language_servers")
-require("lsp/frontend")
-require("lsp/clojure")
---require("lsp/java")
-require("lsp/lspkind-config")
