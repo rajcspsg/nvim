@@ -31,7 +31,7 @@ end
 require("keybindings")
 require("options")
 
-require("lazy").setup("plugins2", {
+require("lazy").setup("plugins", {
 	defaults = { lazy = false },
 	install = { colorscheme = { "tokyonight" } },
 	checker = { enabled = true },
