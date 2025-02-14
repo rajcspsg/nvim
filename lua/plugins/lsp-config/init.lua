@@ -6,4 +6,5 @@ return {
 	require("plugins/lsp-config/go"),
 	require("plugins/lsp-config/rust"),
 	require("plugins/lsp-config/language_servers"),
+	require("plugins/lsp-config/scala"),
 }

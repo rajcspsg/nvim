@@ -11,8 +11,6 @@ return {
 		local _, dap = pcall(require, "dap")
 		local _, dap_vt = pcall(require, "nvim-dap-virtual-text")
 		local _, dap_utils = pcall(require, "dap.utils")
-		local keymap = vim.keymap.set
-		local opts = { noremap = true, silent = true }
 		dap_vt.setup({
 			enabled = true, -- enable this plugin (the default)
 			enabled_commands = true, -- create commands DapVirtualTextEnable, DapVirtualTextDisable, DapVirtualTextToggle, (DapVirtualTextForceRefresh for refreshing when debug adapter did not notify its termination)
@@ -112,6 +110,26 @@ return {
 		vim.fn.sign_define("DapConditionalBreakpoint", { text = "🟡", texthl = "", linehl = "", numhl = "" })
 		vim.fn.sign_define("DapStopped", { text = "🟢", texthl = "", linehl = "", numhl = "" })
 
+		dap.configurations.scala = {
+			{
+				type = "scala",
+				request = "launch",
+				name = "RunOrTest",
+				metals = {
+					runType = "runOrTestFile",
+					--args = { "firstArg", "secondArg", "thirdArg" }, -- here just as an example
+				},
+			},
+			{
+				type = "scala",
+				request = "launch",
+				name = "Test Target",
+				metals = {
+					runType = "testTarget",
+				},
+			},
+		}
+		-- javascript debugging setup
 		local exts = {
 			"javascript",
 			"typescript",
@@ -153,7 +171,7 @@ return {
 		-- │ Configurations                                           │
 		-- ╰──────────────────────────────────────────────────────────╯
 
-		for i, ext in ipairs(exts) do
+		for _, ext in ipairs(exts) do
 			dap.configurations[ext] = {
 				{
 					type = "pwa-chrome",
