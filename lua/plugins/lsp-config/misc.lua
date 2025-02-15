@@ -204,14 +204,14 @@ return {
 	},
 	"mfussenegger/nvim-jdtls",
 	{ "scalameta/nvim-metals", dependenciess = { "nvim-lua/plenary.nvim", "mfussenegger/nvim-dap" } },
-	{
+	--[[{
 		"ray-x/lsp_signature.nvim",
 		event = "VeryLazy",
 		opts = {},
 		config = function(_, opts)
 			require("lsp_signature").setup(opts)
 		end,
-	},
+	},]]--
 	{
 		"kevinhwang91/nvim-hlslens",
 		config = function()
