@@ -33,6 +33,7 @@ return {
 			require("neotest").setup({
 				adapters = {
 					require("neotest-haskell")({
+						build_tools = { "stack", "cabal" },
 						frameworks = {
 							{ framework = "tasty", modules = { "Test.Tasty", "MyTestModule" } },
 							"hspec",
@@ -40,13 +41,14 @@ return {
 						},
 					}),
 					require("neotest-java")({
-						-- config here
+						ignore_wrapper = true,
 					}),
 					require("rustaceanvim.neotest")({}),
 
 					require("neotest-playwright").adapter({}),
 					require("neotest-go")({
 						recursive_run = true,
+						dap_go_enabled = true,
 					}),
 					-- require("neotest-golang"),
 					["neotest-golang"] = {
@@ -87,58 +89,74 @@ return {
 					"NeotestPlaywrightRefresh",
 				},
 				config = {
-					output_panel = { open_on_run = true },
+					output_panel = { open = "botright split | resize 15", open_on_run = true },
+					summary = {
+						open = "botright vsplit | vertical resize 50",
+					},
+					discovery = {
+						concurrent = 2,
+					},
 					diagnostic = true,
 				},
-				--[[keys = {
-		m("<leader>m", "Neotest summary"),
-		m("<leader>M", function()
-			vim.cmd("NeotestPlaywrightRefresh")
-			vim.cmd.write()
-		end),
-		m("[n", function()
-			require("neotest").jump.prev({ status = "failed" })
-		end),
-		m("]n", function()
-			require("neotest").jump.next({ status = "failed" })
-		end),
-		m("<leader>n", function()
-			vim.g.catgoose_terminal_enable_startinsert = 0
-			require("neotest").run.run()
-		end),
-		m("<leader>N", function()
-			vim.g.catgoose_terminal_enable_startinsert = 0
-			require("neotest").run.run(vim.fn.expand("%"))
-		end),
-		m("<leader>1", function()
-			---@diagnostic disable-next-line: missing-parameter
-			require("neotest").watch.stop()
-		end),
-		m("<leader>2", function()
-			---@diagnostic disable-next-line: missing-parameter
-			require("neotest").watch.watch()
-		end),
-		m("<leader>3", function()
-			---@diagnostic disable-next-line: missing-parameter
-			require("neotest").watch.watch(vim.fn.expand("%"))
-		end),
-		m("<leader>4", function()
-			require("neotest").output_panel.toggle()
-		end),
-		m("<leader>8", function()
-			vim.g.catgoose_terminal_enable_startinsert = 1
-			require("neotest").output.open({
-				enter = true,
-				auto_close = true,
-			})
-		end),
-		m("<leader>9", function()
-			---@diagnostic disable-next-line: undefined-field
-			require("neotest").playwright.attachment()
-		end),
-	},
-  ]]
-				--
+				keys = {
+					{
+						"<C-c>nt",
+						function()
+							require("neotest").run.run(vim.fn.expand("%"))
+						end,
+						desc = "Run File",
+					},
+					{
+						"<C-c>nT",
+						function()
+							require("neotest").run.run(vim.loop.cwd())
+						end,
+						desc = "Run All Test Files",
+					},
+					{
+						"<C-c>nr",
+						function()
+							require("neotest").run.run()
+						end,
+						desc = "Run Nearest",
+					},
+					{
+						"<C-c>ns",
+						function()
+							require("neotest").summary.toggle()
+						end,
+						desc = "Toggle Summary",
+					},
+					{
+						"<C-c>no",
+						function()
+							require("neotest").output.open({ enter = true, auto_close = true })
+						end,
+						desc = "Show Output",
+					},
+					{
+						"<C-c>nO",
+						function()
+							require("neotest").output_panel.toggle()
+						end,
+						desc = "Toggle Output Panel",
+					},
+					{
+						"<C-c>nS",
+						function()
+							require("neotest").run.stop()
+						end,
+						desc = "Stop",
+					},
+					---@diagnostic disable-next-line: missing-fields
+					{
+						"<C-c>nd",
+						function()
+							require("neotest").run.run({ strategy = "dap" })
+						end,
+						desc = "Debug Nearest",
+					},
+				},
 				diagnostic = {
 					enabled = false,
 				},

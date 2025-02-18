@@ -110,6 +110,12 @@ return {
 		vim.fn.sign_define("DapConditionalBreakpoint", { text = "🟡", texthl = "", linehl = "", numhl = "" })
 		vim.fn.sign_define("DapStopped", { text = "🟢", texthl = "", linehl = "", numhl = "" })
 
+		dap.adapters.ghc = {
+			type = "executable",
+			command = "haskell-debug-adapter",
+			args = { "--hackage-version=0.0.33.0" },
+		}
+
 		dap.configurations.scala = {
 			{
 				type = "scala",
@@ -203,6 +209,15 @@ return {
 						"${workspaceFolder}/*",
 						"!**/node_modules/**",
 					},
+				},
+				{
+					type = "pwa-node",
+					request = "launch",
+					name = "Launch current file in new node process (" .. ext .. ")",
+					cwd = "${workspaceFolder}",
+					args = { "${file}" },
+					sourceMaps = true,
+					protocol = "inspector",
 				},
 				{
 					name = "Next.js: debug server-side (pwa-node)",
@@ -311,6 +326,22 @@ return {
 					cwd = vim.fn.getcwd(),
 					processId = dap_utils.pick_process,
 					skipFiles = { "<node_internals>/**" },
+				},
+				-- Jest configuration
+				{
+					type = "pwa-node",
+					request = "launch",
+					name = "Debug Jest Tests",
+					-- trace = true, -- include debugger info
+					runtimeExecutable = "node",
+					runtimeArgs = {
+						"./node_modules/jest/bin/jest.js",
+						"--runInBand",
+					},
+					rootPath = "${workspaceFolder}",
+					cwd = "${workspaceFolder}",
+					console = "integratedTerminal",
+					internalConsoleOptions = "neverOpen",
 				},
 			}
 		end
