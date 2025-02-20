@@ -1,6 +1,5 @@
 return {
 	require("plugins/lsp-config/misc"),
-	require("plugins/lsp-config/lspkind-config"),
 	require("plugins/lsp-config/clojure"),
 	require("plugins/lsp-config/yaml-config"),
 	require("plugins/lsp-config/go"),
@@ -9,5 +8,5 @@ return {
 	require("plugins/lsp-config/scala"),
 	require("plugins/lsp-config/tailwind-tools"),
 	require("plugins/lsp-config/typescript-tools"),
-  require("plugins/lsp-config/haskell")
+	require("plugins/lsp-config/haskell"),
 }
