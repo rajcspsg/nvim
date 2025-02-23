@@ -136,7 +136,7 @@ local M = {
 
         -- experimental auto-brackets support
         accept = {
-          auto_brackets = { enabled = false },
+          auto_brackets = { enabled = true },
         },
 
         documentation = {
