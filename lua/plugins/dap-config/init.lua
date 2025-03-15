@@ -5,6 +5,7 @@ return {
     { "stevearc/overseer.nvim", config = true },
     "rcarriga/nvim-dap-ui",            -- recommended
     "theHamsta/nvim-dap-virtual-text", -- recommended
+    { "jonboh/nvim-dap-rr",     dependencies = { "nvim-dap", "telescope.nvim" } },
   },
   config = function()
     local _, dapui = pcall(require, "dapui")
@@ -110,6 +111,16 @@ return {
     vim.fn.sign_define("DapConditionalBreakpoint", { text = "🟡", texthl = "", linehl = "", numhl = "" })
     vim.fn.sign_define("DapStopped", { text = "🟢", texthl = "", linehl = "", numhl = "" })
 
+    local cpptools_path = vim.fn.stdpath("data") .. "/mason/packages/cpptools/extension/debugAdapters/bin/OpenDebugAD7"
+    dap.adapters.cppdbg = {
+      id = 'cppdbg',
+      type = 'executable',
+      command = cpptools_path,
+    }
+
+    local rr_dap = require("nvim-dap-rr")
+    dap.configurations.rust = { rr_dap.get_rust_config() }
+    dap.configurations.cpp = { rr_dap.get_config() }
     dap.adapters.ghc = {
       type = "executable",
       command = "haskell-debug-adapter",
