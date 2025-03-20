@@ -34,7 +34,7 @@ return {
         -- For more info, see ':h diffview-config-view.x.layout'.
         default = {
           -- Config for changed files, and staged files in diff views.
-          layout = "diff3_mixed",
+          layout = "diff2_vertical",
           winbar_info = false, -- See ':h diffview-config-view.x.winbar_info'
         },
         merge_tool = {
@@ -45,7 +45,7 @@ return {
         },
         file_history = {
           -- Config for changed files in file history views.
-          layout = "diff2_horizontal",
+          layout = "diff2_vertical",
           winbar_info = false, -- See ':h diffview-config-view.x.winbar_info'
         },
       },
