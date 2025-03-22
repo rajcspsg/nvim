@@ -51,7 +51,6 @@ return {
       "gradle_ls",
       "hls",
       "html",
-      "lua_ls",
       "nixd",
       "ocamlls",
       "pylsp",
@@ -183,6 +182,51 @@ return {
         fetchDeps = false,
       },
     })
+
+    lspconfig.pylsp.setup({
+      settings = {
+        pylsp = {
+          plugins = {
+            pyflakes = { enabled = false },
+            pycodestyle = { enabled = false },
+            autopep8 = { enabled = false },
+            yapf = { enabled = false },
+            mccabe = { enabled = false },
+            pylsp_mypy = { enabled = false },
+            pylsp_black = { enabled = false },
+            pylsp_isort = { enabled = false },
+          },
+        },
+      },
+    })
+
+    lspconfig.ruff.setup({
+      commands = {
+        RuffAutofix = {
+          function()
+            vim.lsp.buf.execute_command {
+              command = 'ruff.applyAutofix',
+              arguments = {
+                { uri = vim.uri_from_bufnr(0) },
+              },
+            }
+          end,
+          description = 'Ruff: Fix all auto-fixable problems',
+        },
+        RuffOrganizeImports = {
+          function()
+            vim.lsp.buf.execute_command {
+              command = 'ruff.applyOrganizeImports',
+              arguments = {
+                { uri = vim.uri_from_bufnr(0) },
+              },
+            }
+          end,
+          description = 'Ruff: Format imports',
+        },
+      },
+    })
+
 
     lspconfig.yamlls.setup({
       capabilities = capabilities,
