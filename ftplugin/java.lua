@@ -102,7 +102,7 @@ local on_attach = function(client, bufnr)
 	})]]
 	--
 
-	require("lspkind").init()
+	--require("lspkind").init()
 	--require("lspsaga").init_lsp_saga()
 
 	-- Kommentary

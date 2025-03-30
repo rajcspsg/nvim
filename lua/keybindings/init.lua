@@ -1,3 +1,6 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 vim.g.sexp_filetypes = "clojure,scheme,lisp,racket,fennel,janet"
 local map = vim.keymap.set
 
