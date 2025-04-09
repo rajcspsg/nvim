@@ -5,10 +5,33 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "Marskey/telescope-sg" },
+    dependencies = {
+      { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      "nvim-telescope/telescope-ui-select.nvim",
+      "nvim-lua/plenary.nvim",
+      "Marskey/telescope-sg",
+    },
     config = function()
       local actions = require("telescope.actions")
+      local default_theme = "dropdown"
       require("telescope").setup({
+        pickers = {
+          find_files = {
+            theme = default_theme,
+            previewer = false,
+          },
+          git_files = {
+            theme = default_theme,
+            previewer = false,
+          },
+          builtin = {
+            theme = default_theme,
+            previewer = false,
+          },
+          current_buffer_fuzzy_find = {
+            previewer = false,
+          },
+        },
         defaults = {
           layout_config = {
             width = 0.75,
@@ -62,16 +85,41 @@ return {
           },
         },
         extensions = {
+          ["ui-select"] = {
+            require("telescope.themes").get_ivy(),
+          },
           ast_grep = {
             command = {
               "sg",
               "--json=stream",
-            },                       -- must have --json=stream
+            }, -- must have --json=stream
             grep_open_files = false, -- search in opened files
-            lang = nil,              -- string value, specify language for ast-grep `nil` for default
+            lang = nil, -- string value, specify language for ast-grep `nil` for default
           },
         },
       })
+      local utils = require("telescope.utils")
+      local builtin = require("telescope.builtin")
+      local project_files = function()
+        local _, ret, _ = utils.get_os_command_output({ "git", "rev-parse", "--is-inside-work-tree" })
+        if ret == 0 then
+          builtin.git_files()
+        else
+          builtin.find_files()
+        end
+      end
+      vim.keymap.set("n", "<C-p>", project_files, { desc = "Project Files" })
+
+      vim.keymap.set("n", "<leader>tj", builtin.builtin, { desc = "Telescope builtins" })
+      vim.keymap.set("n", "<leader>tf", builtin.find_files, { desc = "Telescope find files" })
+      vim.keymap.set("n", "<leader>/", builtin.live_grep, { desc = "Telescope live grep" })
+      vim.keymap.set("n", "<leader>th", builtin.help_tags, { desc = "Telescope help tags" })
+      vim.keymap.set("n", "<leader>c", function()
+        builtin.git_files({ cwd = "~/.config/nvim/" })
+      end, { desc = "Open nvim init.lua" })
+
+      require("telescope").load_extension("fzf")
+      require("telescope").load_extension("ui-select")
     end,
   },
   {
@@ -112,8 +160,8 @@ return {
       require("telescope").load_extension("hierarchy")
     end,
   },
-  { 'debugloop/telescope-undo.nvim' },
-  { 'nvim-telescope/telescope-symbols.nvim' },
+  { "debugloop/telescope-undo.nvim" },
+  { "nvim-telescope/telescope-symbols.nvim" },
   {
     "luc-tielen/telescope_hoogle",
     ft = { "haskell", "lhaskell", "cabal", "cabalproject" },
