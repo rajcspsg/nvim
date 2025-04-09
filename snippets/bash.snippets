@@ -1,0 +1,148 @@
+snippet script_path_executing "SCRIPT_PATH to directory of script location"
+	SCRIPTPATH=$(dirname "$(realpath "\$0")")
+
+snippet script_path "SCRIPT_PATH to directory of script location"
+	SCRIPTPATH=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+
+snippet random_string "Random string in bash"
+	ID=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 13; echo)
+
+snippet set+x "silent set +x"
+	{ set +x; } 2>/dev/null
+
+snippet required_var "Set required variable in sh"
+	: "\${${1:VAR}?"Error: $1 is a required variable"}"
+
+snippet colors "A bunch of colors for shell scripting [regular]"
+	Color_Off='\033[0m'
+	Black='\033[0;30m'
+	Red='\033[0;31m'
+	Green='\033[0;32m'
+	Yellow='\033[0;33m'
+	Blue='\033[0;34m'
+	Purple='\033[0;35m'
+	Cyan='\033[0;36m'
+	White='\033[0;37m'
+	PS4="\${Yellow}>>>\${Color_Off} "
+
+snippet colors_bold "A bunch of colors for shell scripting [bold]"
+	BBlack='\033[1;30m'
+	BRed='\033[1;31m'
+	BGreen='\033[1;32m'
+	BYellow='\033[1;33m'
+	BBlue='\033[1;34m'
+	BPurple='\033[1;35m'
+	BCyan='\033[1;36m'
+	BWhite='\033[1;37m'
+
+snippet colors_underline "A bunch of colors for shell scripting [underline]"
+	UBlack='\033[4;30m'
+	URed='\033[4;31m'
+	UGreen='\033[4;32m'
+	UYellow='\033[4;33m'
+	UBlue='\033[4;34m'
+	UPurple='\033[4;35m'
+	UCyan='\033[4;36m'
+	UWhite='\033[4;37m'
+
+snippet colors_background "A bunch of colors for shell scripting [background]"
+	On_Black='\033[40m'
+	On_Red='\033[41m'
+	On_Green='\033[42m'
+	On_Yellow='\033[43m'
+	On_Blue='\033[44m'
+	On_Purple='\033[45m'
+	On_Cyan='\033[46m'
+	On_White='\033[47m'
+
+snippet colors_high_intensity "A bunch of colors for shell scripting [high Intensity]"
+	IBlack='\033[0;90m'
+	IRed='\033[0;91m'
+	IGreen='\033[0;92m'
+	IYellow='\033[0;93m'
+	IBlue='\033[0;94m'
+	IPurple='\033[0;95m'
+	ICyan='\033[0;96m'
+	IWhite='\033[0;97m'
+
+snippet colors_bold_high_intensity "A bunch of colors for shell scripting [bold high Intensity]"
+	BIBlack='\033[1;90m'
+	BIRed='\033[1;91m'
+	BIGreen='\033[1;92m'
+	BIYellow='\033[1;93m'
+	BIBlue='\033[1;94m'
+	BIPurple='\033[1;95m'
+	BICyan='\033[1;96m'
+	BIWhite='\033[1;97m'
+
+snippet colors_high_intensity_backgrounds "A bunch of colors for shell scripting [high Intensity backgrounds]"
+	On_IBlack='\033[0;100m'
+	On_IRed='\033[0;101m'
+	On_IGreen='\033[0;102m'
+	On_IYellow='\033[0;103m'
+	On_IBlue='\033[0;104m'
+	On_IPurple='\033[0;105m'
+	On_ICyan='\033[0;106m'
+	On_IWhite='\033[0;107m'
+
+snippet heredoc_new_file "Here content to new file"
+	cat << EOF > $1
+	$2
+	EOF
+
+snippet arguments_bash "bash Space seperated --option arguments"
+	POSITIONAL_ARGS=()
+
+	while [[ $# -gt 0 ]]; do
+		case \$1 in
+		-s | --something)
+			arg="\$2"
+			SOMETHING=("$arg")
+			shift 2 # with arg
+			;;
+		--default)
+			DEFAULT=YES
+			shift # with out
+			;;
+		-*)
+			echo "Unknown option \$1"
+			exit 1
+			;;
+		*)
+			POSITIONAL_ARGS+=("\$1") # save positional arg
+			shift                   # past argument
+			;;
+		esac
+	done
+
+	set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+	echo "${POSITIONAL_ARGS[@]}"
+
+snippet get_required_apps "Bash function to get required applications for this program"
+	get_required_apps() {
+		needed=($1)
+		for need in "\${needed[@]}"; do
+			if ! command -v "\$need" >/dev/null; then
+				echo "Missing  required app: \${need}"
+				exit 1
+			fi
+		done
+	}
+
+snippet loop_over_file "While loop for contents of a file"
+	while read -r line; do
+		echo "--> \$line"
+	done <$1
+
+snippet export_oauth_vault_cred "SM export var with vault lookup"
+	export $1__client_$2="{{ vault_lookup('[vp]/data/oauth', '$1_client_$2', vault_token) }}"
+
+snippet split_to_array_comma "Split a comma seperated string by comma"
+	mapfile -t -d ',' ${1:new_array} < <(printf '%s' "${2:foo,bar}")
+
+snippet join_array_comma "Join an array by comma"
+	${1:VAR}=$(
+		IFS=$','
+		echo "\${${2:array}[*]}"
+	)
