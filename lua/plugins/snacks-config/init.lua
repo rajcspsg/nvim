@@ -2,45 +2,44 @@ local cwd = vim.fn.stdpath("config")
 
 -- Toggle floating terminal
 local term_opts = {
-	auto_close = true,
-	win = {
-		border = "rounded",
-		title = " Floating Terminal ",
-		title_pos = "center",
-	},
+  auto_close = true,
+  win = {
+    border = "rounded",
+    title = " Floating Terminal ",
+    title_pos = "center",
+  },
 }
 
 return {
-	"folke/snacks.nvim",
-	priority = 1000,
-	lazy = false,
-	---@type snacks.Config
-	opts = {
-		bigfile = { enabled = true },
-		explorer = { replace_netrw = true },
-		input = { enabled = true },
-		image = { enabled = true },
-		notifier = { enabled = true },
-		picker = {
-			enabled = true,
-			sources = {
-				command_history = {
-					layout = { layout = { border = "rounded" } },
-				},
-				explorer = {
-					focus = "input",
-					layout = { layout = { position = "left" } },
-				},
-			},
-		},
-		statuscolumn = {},
-		scroll = { enabled = true },
-		terminal = {},
-		quickfile = { enabled = true },
-		words = { enabled = false },
-	},
-	keys = {
-		-- Top Pickers & Explorer
+  "folke/snacks.nvim",
+  priority = 1000,
+  lazy = false,
+  ---@type snacks.Config
+  opts = {
+    bigfile = { enabled = true },
+    explorer = { replace_netrw = true },
+    input = { enabled = true },
+    image = { enabled = true },
+    notifier = { enabled = true },
+    picker = {
+      enabled = true,
+      sources = {
+        command_history = {
+          layout = { layout = { border = "rounded" } },
+        },
+        explorer = {
+          focus = "input",
+          layout = { layout = { position = "left" } },
+        },
+      },
+    },
+    statuscolumn = {},
+    scroll = { enabled = true },
+    terminal = {},
+    quickfile = { enabled = true },
+    words = { enabled = false },
+  },
+  --[[ keys = {
 		{
 			"<leader>l",
 			function()
@@ -329,5 +328,6 @@ return {
 			end,
 			desc = "Dismiss All Notifications",
 		},
-	},
+	},]]
+  --
 }
