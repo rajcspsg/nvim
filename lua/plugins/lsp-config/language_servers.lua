@@ -24,7 +24,7 @@ return {
       },
     }
 
-    local capabilities = require('blink.cmp').get_lsp_capabilities()
+    local capabilities = require("blink.cmp").get_lsp_capabilities()
 
     local lspconfig = require("lspconfig")
 
@@ -53,8 +53,7 @@ return {
       "html",
       "nixd",
       "ocamlls",
-      "pylsp",
-      "ts_ls",
+      "python-lsp-server",
       "vls",
       "zls",
     }
@@ -62,6 +61,35 @@ return {
     for _, server in ipairs(langservers) do
       lspconfig[server].setup({ capabilities = capabilities })
     end
+
+    lspconfig.ts_ls.setup({
+      capabilities = capabilities,
+      cmd = { "typescript-language-server", "--stdio" },
+      root_markers = { "package.json" },
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx",
+      },
+    })
+
+    lspconfig.denols.setup({
+      capabilities = capabilities,
+      cmd = { "deno", "lsp" },
+      cmd_env = { NO_COLOR = true },
+      root_markers = { "deno.json" },
+      filetypes = {
+        "javascript",
+        "javascriptreact",
+        "javascript.jsx",
+        "typescript",
+        "typescriptreact",
+        "typescript.tsx",
+      },
+    })
 
     lspconfig.lua_ls.setup({
 
@@ -204,29 +232,28 @@ return {
       commands = {
         RuffAutofix = {
           function()
-            vim.lsp.buf.execute_command {
-              command = 'ruff.applyAutofix',
+            vim.lsp.buf.execute_command({
+              command = "ruff.applyAutofix",
               arguments = {
                 { uri = vim.uri_from_bufnr(0) },
               },
-            }
+            })
           end,
-          description = 'Ruff: Fix all auto-fixable problems',
+          description = "Ruff: Fix all auto-fixable problems",
         },
         RuffOrganizeImports = {
           function()
-            vim.lsp.buf.execute_command {
-              command = 'ruff.applyOrganizeImports',
+            vim.lsp.buf.execute_command({
+              command = "ruff.applyOrganizeImports",
               arguments = {
                 { uri = vim.uri_from_bufnr(0) },
               },
-            }
+            })
           end,
-          description = 'Ruff: Format imports',
+          description = "Ruff: Format imports",
         },
       },
     })
-
 
     lspconfig.yamlls.setup({
       capabilities = capabilities,
