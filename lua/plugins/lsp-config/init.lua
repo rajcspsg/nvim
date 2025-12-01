@@ -10,4 +10,5 @@ return {
   require("plugins/lsp-config/tailwind-tools"),
   require("plugins/lsp-config/typescript-tools"),
   require("plugins/lsp-config/haskell"),
+  require("plugins/lsp-config/python"),
 }
