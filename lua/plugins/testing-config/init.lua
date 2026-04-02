@@ -63,7 +63,7 @@ return {
               return vim.fn.getcwd()
             end,
           }),
-          require("neotest-scala"),
+          --require("neotest-scala"),
           require("neotest-zig")({
             dap = {
               adapter = "lldb",
