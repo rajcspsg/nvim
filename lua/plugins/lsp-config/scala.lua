@@ -43,7 +43,14 @@ return {
 
       metals.setup_dap()
 
-      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "single" })
+      vim.lsp.handlers["textDocument/hover"] = function(err, result, ctx, config)
+        return vim.lsp.handlers.hover(
+          err,
+          result,
+          ctx,
+          vim.tbl_deep_extend("force", config or {}, { border = "single" })
+        )
+      end
       vim.lsp.inlay_hint.enable(true)
       local nvim_metals_group = vim.api.nvim_create_augroup("nvim-metals", { clear = true })
       vim.api.nvim_create_autocmd("FileType", {

@@ -1,6 +1,7 @@
 return {
 	{
 		"Vigemus/iron.nvim",
+    dependencies = { "folke/which-key.nvim" },
 		keys = {
 			{
 				"<leader>ii",
