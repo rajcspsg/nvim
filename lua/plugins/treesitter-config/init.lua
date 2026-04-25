@@ -170,7 +170,7 @@ return {
     event = "InsertEnter",
     dependencies = "nvim-treesitter/nvim-treesitter",
   },
-
+  --[[
   {
     "ldelossa/litee.nvim",
     event = "VeryLazy",
@@ -191,7 +191,8 @@ return {
       require("litee.calltree").setup(opts)
     end,
   },
-
+  ]]
+  --
   {
     "Wansmer/treesj",
     cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
