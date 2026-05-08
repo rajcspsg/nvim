@@ -113,6 +113,32 @@ return {
 			vim.fn.sign_define("DapConditionalBreakpoint", { text = "🟡", texthl = "", linehl = "", numhl = "" })
 			vim.fn.sign_define("DapStopped", { text = "🟢", texthl = "", linehl = "", numhl = "" })
 
+			-- Setup persistent-breakpoints
+			local pb_status, persistent_breakpoints = pcall(require, "persistent-breakpoints")
+			if pb_status then
+				persistent_breakpoints.setup({
+					load_breakpoints_event = { "BufReadPost" },
+				})
+
+				-- Setup persistent-breakpoints keybindings
+				local pb_api = require("persistent-breakpoints.api")
+				vim.keymap.set("n", "<Leader>db", function()
+					pb_api.toggle_breakpoint()
+				end, { silent = true, desc = "Toggle Breakpoint" })
+				vim.keymap.set("n", "<Leader>dB", function()
+					pb_api.clear_all_breakpoints()
+				end, { silent = true, desc = "Clear Breakpoints" })
+				vim.keymap.set("n", "<Leader>dC", function()
+					pb_api.set_conditional_breakpoint()
+				end, { silent = true, desc = "Conditional Breakpoint" })
+			end
+
+			-- Setup nvim-dap-repl-highlights
+			local repl_hl_status, nvim_dap_repl_highlights = pcall(require, "nvim-dap-repl-highlights")
+			if repl_hl_status then
+				nvim_dap_repl_highlights.setup()
+			end
+
 			require("dap-python").setup("python3")
 
 			local cpptools_path = vim.fn.stdpath("data")
@@ -385,6 +411,33 @@ return {
 					},
 				}
 			end
+
+			-- ╭──────────────────────────────────────────────────────────╮
+			-- │ Java Configuration                                       │
+			-- ╰──────────────────────────────────────────────────────────╯
+			dap.configurations.java = {
+				{
+					type = "java",
+					request = "attach",
+					name = "Debug (Attach) - Remote",
+					hostName = "127.0.0.1",
+					port = 5005,
+				},
+				{
+					type = "java",
+					request = "launch",
+					name = "Debug (Launch) - Current File",
+					mainClass = "${file}",
+				},
+				{
+					type = "java",
+					request = "launch",
+					name = "Debug (Launch) - Main Class",
+					mainClass = function()
+						return vim.fn.input("Main class: ", "")
+					end,
+				},
+			}
 		end,
 	},
 	{

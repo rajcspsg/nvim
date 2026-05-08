@@ -18,6 +18,7 @@ local ts_parsers = {
   "zig",
   "nix",
   "java",
+  "dap_repl",
 }
 
 return {

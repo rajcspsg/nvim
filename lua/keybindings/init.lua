@@ -33,7 +33,7 @@ map("n", "<leader>ws", '<cmd>lua require"metals".hover_worksheet()<CR>', {})
 map("n", "<leader>aa", [[<cmd>lua vim.diagnostic.setqflist()<CR>]], {}) -- all workspace diagnostics
 map("n", "<leader>ae", [[<cmd>lua vim.diagnostic.setqflist({severity = "E"})<CR>]], {}) -- all workspace errors
 map("n", "<leader>aw", [[<cmd>lua vim.diagnostic.setqflist({severity = "W"})<CR>]], {}) -- all workspace warnings
-map("n", "<leader>d", "<cmd>lua vim.diagnostic.setloclist()<CR>", {}) -- buffer diagnostics onlylsp_
+map("n", "<leader>ld", "<cmd>lua vim.diagnostic.setloclist()<CR>", {}) -- buffer diagnostics onlylsp_
 map("n", "[c", "<cmd>lua vim.diagnostic.goto_prev { wrap = false }<CR>", {})
 map("n", "]c", "<cmd>lua vim.diagnostic.goto_next { wrap = false }<CR>", {})
 
@@ -46,6 +46,11 @@ map("n", "<leader>dt", [[<cmd>lua require"dap".toggle_breakpoint()<CR>]], {})
 map("n", "<leader>dso", [[<cmd>lua require"dap".step_over()<CR>]], {})
 map("n", "<leader>dsi", [[<cmd>lua require"dap".step_into()<CR>]], {})
 map("n", "<leader>dl", [[<cmd>lua require"dap".run_last()<CR>]], {})
+
+-- Persistent breakpoints mappings (loaded early to ensure they take precedence)
+map("n", "<leader>db", [[<cmd>lua require"persistent-breakpoints.api".toggle_breakpoint()<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dB", [[<cmd>lua require"persistent-breakpoints.api".clear_all_breakpoints()<CR>]], { noremap = true, silent = true })
+map("n", "<leader>dC", [[<cmd>lua require"persistent-breakpoints.api".set_conditional_breakpoint()<CR>]], { noremap = true, silent = true })
 -- Vimspector
 vim.cmd([[
 nmap <F9> <cmd>call vimspector#Launch()<cr>

@@ -81,4 +81,26 @@ echo "Updated: $updated"
 echo "Already up to date: $((total - updated - failed))"
 echo "Failed: $failed"
 echo ""
+
+echo "================================================"
+echo "  Updating Mason packages..."
+echo "================================================"
+echo ""
+
+# Check if neovim is available
+if command -v nvim > /dev/null 2>&1; then
+  echo "Updating all Mason packages..."
+
+  # Update Mason packages in headless mode
+  nvim --headless -c "MasonUpdate" -c "sleep 3" -c "qall" 2>/dev/null
+
+  echo "  ✓ Mason packages updated"
+  echo ""
+  echo "  ⚠️  Note: Check :Mason in Neovim to verify"
+else
+  echo "  ⚠️  Neovim not found, skipping Mason updates"
+  echo "     Update Mason packages manually with :MasonUpdate"
+fi
+
+echo ""
 echo "Done! Restart Neovim to apply updates."

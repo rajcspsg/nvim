@@ -251,9 +251,45 @@ echo "Total plugins: $((count + 1))"
 echo "Successfully installed: $success"
 echo "Failed: $failed"
 echo ""
+echo "================================================"
+echo "  Installing Mason packages..."
+echo "================================================"
+echo ""
+
+# Check if neovim is available
+if command -v nvim > /dev/null 2>&1; then
+  echo "Installing Mason LSP servers and tools..."
+
+  # Install Mason packages in headless mode
+  nvim --headless -c "MasonInstall lua-language-server typescript-language-server" -c "qall" 2>/dev/null &
+  sleep 2
+
+  echo "Installing DAP adapters..."
+  nvim --headless -c "MasonInstall java-debug-adapter java-test debugpy js-debug-adapter codelldb" -c "qall" 2>/dev/null &
+  sleep 2
+
+  echo "Installing formatters..."
+  nvim --headless -c "MasonInstall prettier stylua shfmt" -c "qall" 2>/dev/null &
+  sleep 2
+
+  echo "Installing Treesitter parsers..."
+  nvim --headless -c "TSInstall lua python javascript typescript java dap_repl" -c "sleep 5" -c "qall" 2>/dev/null &
+  sleep 3
+
+  echo ""
+  echo "  ⚠️  Note: Mason and Treesitter installations run in background"
+  echo "     Check status in Neovim with :Mason and :TSInstallInfo"
+else
+  echo "  ⚠️  Neovim not found, skipping Mason installations"
+  echo "     Install Mason packages manually with :MasonInstall"
+fi
+
+echo ""
 echo "Installation complete!"
 echo ""
 echo "Next steps:"
-echo "  1. Start Neovim: nvim"
-echo "  2. Update plugins: ~/.config/nvim/update-plugins.sh"
+echo "  1. Wait for Mason background installs to complete (~2-5 minutes)"
+echo "  2. Start Neovim: nvim"
+echo "  3. Check Mason status: :Mason"
+echo "  4. Update plugins: ~/.config/nvim/update-plugins.sh"
 echo ""
