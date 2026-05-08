@@ -69,6 +69,14 @@ for _, config in ipairs(plugin_configs) do
 		if type(mod_or_fault) == "table" then
 			-- Helper function to evaluate opts and call config
 			local function setup_plugin_spec(spec)
+				-- Call build function first if present
+				if type(spec.build) == "function" then
+					local build_ok, build_err = pcall(spec.build)
+					if not build_ok then
+						vim.api.nvim_err_writeln("Failed to run build for " .. config .. "\n\n" .. tostring(build_err))
+					end
+				end
+
 				if type(spec.config) == "function" then
 					-- Evaluate opts if present
 					local opts = nil
@@ -95,7 +103,7 @@ for _, config in ipairs(plugin_configs) do
 			end
 
 			-- Handle single spec with config
-			if type(mod_or_fault.config) == "function" then
+			if type(mod_or_fault.config) == "function" or type(mod_or_fault.build) == "function" then
 				setup_plugin_spec(mod_or_fault)
 			end
 
