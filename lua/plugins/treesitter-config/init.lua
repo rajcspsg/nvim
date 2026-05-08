@@ -22,6 +22,15 @@ local ts_parsers = {
 
 return {
   {
+    "retran/meow.yarn.nvim",
+    dependencies = { "MunifTanjim/nui.nvim" },
+    config = function()
+        require("meow.yarn").setup({
+            -- Your custom configuration goes here
+        })
+    end,
+},
+  {
     "nvim-treesitter/nvim-treesitter",
     version = false,
     build = ":TSUpdate",
@@ -198,7 +207,9 @@ return {
     cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
     dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
-      require("configs.treesj")
+      require("treesj").setup({
+        use_default_keymaps = false,
+      })
     end,
   },
 

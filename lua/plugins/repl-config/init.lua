@@ -1,7 +1,20 @@
+local supported_filetypes = {
+	"sh",
+	"typescript",
+	"javascript",
+	"nix",
+	"racket",
+	"purescript",
+	"elvish",
+	"haskell",
+	"lua",
+	"python3",
+}
+
 return {
 	{
 		"Vigemus/iron.nvim",
-    dependencies = { "folke/which-key.nvim" },
+		dependencies = { "folke/which-key.nvim" },
 		keys = {
 			{
 				"<leader>ii",
@@ -36,7 +49,7 @@ return {
 			local ironCore = require("iron.core")
 			ironCore.setup(opts)
 
-			local group = vim.api.nvim_create_augroup("IronRepl", { clear = true })
+			local group = vim.api.nvim_create_augroup("IronReplConfig", { clear = true })
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = supported_filetypes,
 				group = group,

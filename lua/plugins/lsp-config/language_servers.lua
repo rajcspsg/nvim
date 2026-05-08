@@ -4,6 +4,26 @@ return {
     "blink.cmp",
   },
   config = function()
+    -- Temporarily suppress deprecation warnings from lspconfig
+    local original_notify = vim.notify
+    local original_deprecate = vim.deprecate
+
+    vim.notify = function(msg, level, opts)
+      -- Filter out lspconfig deprecation warnings
+      if type(msg) == "string" and msg:match("lspconfig.*deprecated") then
+        return
+      end
+      original_notify(msg, level, opts)
+    end
+
+    vim.deprecate = function(name, alternative, version, plugin, backtrace)
+      -- Suppress lspconfig deprecation notices
+      if plugin == "nvim-lspconfig" or (type(name) == "string" and name:match("lspconfig")) then
+        return
+      end
+      original_deprecate(name, alternative, version, plugin, backtrace)
+    end
+
     -- Setup lspconfig.
     local lspconfig = require("lspconfig")
     local vim_capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -35,6 +55,40 @@ return {
     -- For reference, servers being managed by mason-lspconfig:
     -- lua_ls, gopls, yamlls, denols, ts_ls, etc.
 
+    -- WORKAROUND: gopls setup before Mason initializes
+    -- Mason-lspconfig handlers only run for already-installed servers.
+    -- Until Mason installs gopls, we need to set it up manually.
+    local global_gopls = vim.fn.expand("~/go/bin/gopls")
+    if vim.fn.executable(global_gopls) == 1 then
+      -- Access lspconfig properties while notify is suppressed
+      local gopls = lspconfig.gopls
+      local util = lspconfig.util
+
+      -- Restore notify and deprecate before calling setup (so real errors are shown)
+      vim.notify = original_notify
+      vim.deprecate = original_deprecate
+
+      gopls.setup({
+        capabilities = capabilities,
+        cmd = { global_gopls },
+        filetypes = { "go", "gomod", "gowork", "gotmpl" },
+        root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+        settings = {
+          gopls = {
+            analyses = {
+              unusedparams = true,
+            },
+            staticcheck = true,
+            gofumpt = true,
+          },
+        },
+      })
+    else
+      -- Restore notify and deprecate even if gopls not found
+      vim.notify = original_notify
+      vim.deprecate = original_deprecate
+    end
+
     -- Uncomment below if you need to override specific server settings:
     -- require("lspconfig").lua_ls.setup({
     --   capabilities = capabilities,
@@ -49,5 +103,9 @@ return {
     cmd([[autocmd FileType scala setlocal omnifunc=v:lua.vim.lsp.omnifunc]])
     -- If you want a :Format command this is useful
     cmd([[command! Format lua vim.lsp.buf.format({ async = true })]])
+
+    -- Ensure notify and deprecate are restored
+    vim.notify = original_notify
+    vim.deprecate = original_deprecate
   end,
 }

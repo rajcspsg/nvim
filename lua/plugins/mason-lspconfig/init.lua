@@ -44,10 +44,36 @@ return {
                 },
               }
             end
+            -- Special handling for gopls to use global installation if Mason version not available
+            if server_name == "gopls" then
+              local mason_gopls = vim.fn.stdpath("data") .. "/mason/bin/gopls"
+              if vim.fn.executable(mason_gopls) == 0 then
+                -- Mason's gopls not available, use global
+                local global_gopls = vim.fn.expand("~/go/bin/gopls")
+                if vim.fn.executable(global_gopls) == 1 then
+                  opts.cmd = { global_gopls }
+                else
+                  -- No gopls available, skip setup
+                  return
+                end
+              end
+              opts.settings = {
+                gopls = {
+                  analyses = {
+                    unusedparams = true,
+                  },
+                  staticcheck = true,
+                  gofumpt = true,
+                },
+              }
+            end
             -- Use pcall to safely access lspconfig servers
-            pcall(function()
+            local ok, err = pcall(function()
               lspconfig[server_name].setup(opts)
             end)
+            if not ok and server_name == "gopls" then
+              vim.notify("Failed to setup gopls: " .. tostring(err), vim.log.levels.ERROR)
+            end
           end,
         },
       })
