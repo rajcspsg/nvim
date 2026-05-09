@@ -133,25 +133,146 @@ return {
 				end, { silent = true, desc = "Conditional Breakpoint" })
 			end
 
-			-- Setup nvim-dap-repl-highlights
-			local repl_hl_status, nvim_dap_repl_highlights = pcall(require, "nvim-dap-repl-highlights")
-			if repl_hl_status then
-				nvim_dap_repl_highlights.setup()
+			-- Setup DAP REPL highlighting with vanilla treesitter
+			-- Enable treesitter highlighting for dap-repl filetype
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "dap-repl",
+				callback = function(args)
+					-- Enable treesitter for DAP REPL buffer
+					local buf = args.buf
+					pcall(vim.treesitter.start, buf, "dap_repl")
+
+					-- Set up syntax highlighting
+					vim.bo[buf].syntax = "off" -- Disable legacy syntax
+					vim.treesitter.start(buf, "dap_repl")
+
+					-- Optional: Set up indentation
+					vim.bo[buf].indentexpr = "v:lua.vim.treesitter.indentexpr()"
+				end,
+			})
+
+			-- Also enable for any existing dap-repl buffers when DAP starts
+			dap.listeners.after.event_initialized["dap_repl_highlight"] = function()
+				vim.schedule(function()
+					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+						if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].filetype == "dap-repl" then
+							pcall(vim.treesitter.start, buf, "dap_repl")
+						end
+					end
+				end)
 			end
 
 			require("dap-python").setup("python3")
 
+			-- Setup codelldb adapter for Rust and C/C++ debugging
+			local codelldb_path = vim.fn.stdpath("data") .. "/mason/bin/codelldb"
+			if vim.fn.executable(codelldb_path) == 1 then
+				dap.adapters.codelldb = {
+					type = "server",
+					port = "${port}",
+					executable = {
+						command = codelldb_path,
+						args = { "--port", "${port}" },
+					},
+				}
+
+				-- Rust debugging configuration
+				dap.configurations.rust = {
+					{
+						name = "Launch",
+						type = "codelldb",
+						request = "launch",
+						program = function()
+							-- Try to find the binary in target/debug
+							local cwd = vim.fn.getcwd()
+							local target_dir = cwd .. "/target/debug"
+
+							-- Get the package name from Cargo.toml
+							local cargo_toml = cwd .. "/Cargo.toml"
+							if vim.fn.filereadable(cargo_toml) == 1 then
+								local content = vim.fn.readfile(cargo_toml)
+								for _, line in ipairs(content) do
+									local name = line:match('^name%s*=%s*"([^"]+)"')
+									if name then
+										local binary = target_dir .. "/" .. name
+										if vim.fn.filereadable(binary) == 1 then
+											return binary
+										end
+									end
+								end
+							end
+
+							-- Fallback to manual input
+							return vim.fn.input("Path to executable: ", cwd .. "/target/debug/", "file")
+						end,
+						cwd = "${workspaceFolder}",
+						stopOnEntry = false,
+						args = {},
+						runInTerminal = false,
+					},
+					{
+						name = "Launch with arguments",
+						type = "codelldb",
+						request = "launch",
+						program = function()
+							local cwd = vim.fn.getcwd()
+							return vim.fn.input("Path to executable: ", cwd .. "/target/debug/", "file")
+						end,
+						cwd = "${workspaceFolder}",
+						stopOnEntry = false,
+						args = function()
+							local args_string = vim.fn.input("Arguments: ")
+							return vim.split(args_string, " +")
+						end,
+						runInTerminal = false,
+					},
+				}
+
+				-- C/C++ debugging configuration
+				dap.configurations.cpp = {
+					{
+						name = "Launch",
+						type = "codelldb",
+						request = "launch",
+						program = function()
+							return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+						end,
+						cwd = "${workspaceFolder}",
+						stopOnEntry = false,
+						args = {},
+						runInTerminal = false,
+					},
+				}
+				dap.configurations.c = dap.configurations.cpp
+			else
+				vim.notify(
+					"codelldb not found. Install it via :MasonInstall codelldb",
+					vim.log.levels.WARN
+				)
+			end
+
+			-- Setup cppdbg adapter (optional, only if installed)
 			local cpptools_path = vim.fn.stdpath("data")
 				.. "/mason/packages/cpptools/extension/debugAdapters/bin/OpenDebugAD7"
-			dap.adapters.cppdbg = {
-				id = "cppdbg",
-				type = "executable",
-				command = cpptools_path,
-			}
+			if vim.fn.executable(cpptools_path) == 1 then
+				dap.adapters.cppdbg = {
+					id = "cppdbg",
+					type = "executable",
+					command = cpptools_path,
+				}
+			end
 
-			local rr_dap = require("nvim-dap-rr")
-			dap.configurations.rust = { rr_dap.get_rust_config() }
-			dap.configurations.cpp = { rr_dap.get_config() }
+			-- Setup nvim-dap-rr (optional record-replay debugging)
+			local rr_status, rr_dap = pcall(require, "nvim-dap-rr")
+			if rr_status then
+				-- Only set up rr configurations if the user has rr installed
+				if vim.fn.executable("rr") == 1 then
+					table.insert(dap.configurations.rust, rr_dap.get_rust_config())
+					if dap.configurations.cpp then
+						table.insert(dap.configurations.cpp, rr_dap.get_config())
+					end
+				end
+			end
 			dap.adapters.ghc = {
 				type = "executable",
 				command = "haskell-debug-adapter",
@@ -446,22 +567,8 @@ return {
 			ensure_installed = { "python", "delve", "debugpy", "js-debug-adapter", "codelldb", "java-debug-adapter" },
 		},
 	},
-	{
-		"LiadOz/nvim-dap-repl-highlights",
-		lazy = true,
-		specs = {
-			{
-				"nvim-treesitter/nvim-treesitter",
-				dependencies = {
-					"mfussenegger/nvim-dap",
-					"AstroNvim/astrocore",
-				},
-				opts = function(_, opts)
-					require("astrocore").list_insert_unique(opts.ensure_installed, { "dap_repl" })
-				end,
-			},
-		},
-	},
+	-- nvim-dap-repl-highlights has been removed as it depends on the archived nvim-treesitter
+	-- DAP REPL highlighting is now configured above using vanilla treesitter (lines 136-163)
 	{
 		"chrisgrieser/nvim-chainsaw",
 		event = "VeryLazy",

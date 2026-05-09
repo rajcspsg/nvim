@@ -1,8 +1,5 @@
--- nvim-treesitter (main branch) uses `vim.treesitter.start()` + this plugin's
--- indentexpr — not `nvim-treesitter.configs`. Textobjects are configured via
--- `nvim-treesitter-textobjects` + explicit keymaps.
--- Upstream README still recommends `lazy = false` for nvim-treesitter; we lazy-load
--- on buffer open below — if anything misbehaves, switch back to `lazy = false`.
+-- Vanilla Neovim treesitter configuration
+-- Uses built-in vim.treesitter API instead of the archived nvim-treesitter plugin
 
 local ts_parsers = {
   "lua",
@@ -21,6 +18,151 @@ local ts_parsers = {
   "dap_repl",
 }
 
+-- Helper function to ensure parsers are installed
+-- Parsers can be manually installed via :TSInstall command if needed
+-- or by using a package manager to install them
+local function ensure_parsers_installed()
+  -- Vanilla treesitter parsers are typically included with Neovim
+  -- Additional parsers can be installed via Mason or manually
+  -- This is a placeholder for any future parser installation logic
+end
+
+-- Setup treesitter with vanilla API
+local function setup_treesitter()
+  -- Enable treesitter-based folding
+  vim.opt.foldmethod = "expr"
+  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
+  -- Auto-start treesitter for all buffers
+  vim.api.nvim_create_autocmd("FileType", {
+    callback = function(args)
+      pcall(vim.treesitter.start, args.buf)
+
+      -- Use treesitter for indenting
+      vim.bo[args.buf].indentexpr = "v:lua.vim.treesitter.indentexpr()"
+    end,
+  })
+
+  ensure_parsers_installed()
+end
+
+-- Setup treesitter textobjects using vanilla API
+local function setup_textobjects()
+  -- Helper to select textobject
+  local function select_textobject(query_string)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local node = vim.treesitter.get_node()
+    if not node then return end
+
+    local query = vim.treesitter.query.get(vim.bo.filetype, query_string)
+    if not query then return end
+
+    local start_row, start_col, end_row, end_col
+    for _, match in query:iter_matches(node:tree():root(), bufnr) do
+      for id, matched_node in pairs(match) do
+        local name = query.captures[id]
+        if name == query_string:match("@(.*)") then
+          start_row, start_col, end_row, end_col = matched_node:range()
+          break
+        end
+      end
+    end
+
+    if start_row then
+      vim.api.nvim_buf_set_mark(bufnr, "<", start_row + 1, start_col, {})
+      vim.api.nvim_buf_set_mark(bufnr, ">", end_row + 1, end_col - 1, {})
+      vim.cmd("normal! gv")
+    end
+  end
+
+  -- Helper to move to next/previous textobject
+  local function goto_textobject(query_string, forward)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local node = vim.treesitter.get_node()
+    if not node then return end
+
+    local query = vim.treesitter.query.get(vim.bo.filetype, query_string)
+    if not query then return end
+
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local cursor_row = cursor[1] - 1
+
+    local target_node
+    local min_distance = math.huge
+
+    for _, match in query:iter_matches(node:tree():root(), bufnr) do
+      for id, matched_node in pairs(match) do
+        local start_row = matched_node:range()
+        local distance = forward and (start_row - cursor_row) or (cursor_row - start_row)
+
+        if distance > 0 and distance < min_distance then
+          min_distance = distance
+          target_node = matched_node
+        end
+      end
+    end
+
+    if target_node then
+      local row, col = target_node:range()
+      vim.api.nvim_win_set_cursor(0, { row + 1, col })
+    end
+  end
+
+  -- Textobject selection mappings
+  vim.keymap.set({ "x", "o" }, "af", function()
+    select_textobject("@function.outer")
+  end, { desc = "Select outer function" })
+
+  vim.keymap.set({ "x", "o" }, "if", function()
+    select_textobject("@function.inner")
+  end, { desc = "Select inner function" })
+
+  vim.keymap.set({ "x", "o" }, "aa", function()
+    select_textobject("@parameter.outer")
+  end, { desc = "Select outer parameter" })
+
+  vim.keymap.set({ "x", "o" }, "ia", function()
+    select_textobject("@parameter.inner")
+  end, { desc = "Select inner parameter" })
+
+  vim.keymap.set({ "x", "o" }, "ac", function()
+    select_textobject("@comment.outer")
+  end, { desc = "Select outer comment" })
+
+  vim.keymap.set({ "x", "o" }, "ic", function()
+    select_textobject("@comment.inner")
+  end, { desc = "Select inner comment" })
+
+  -- Movement mappings
+  vim.keymap.set({ "n", "x", "o" }, "]f", function()
+    goto_textobject("@function.outer", true)
+  end, { desc = "Next function" })
+
+  vim.keymap.set({ "n", "x", "o" }, "[f", function()
+    goto_textobject("@function.outer", false)
+  end, { desc = "Previous function" })
+
+  vim.keymap.set({ "n", "x", "o" }, "]a", function()
+    goto_textobject("@parameter.inner", true)
+  end, { desc = "Next parameter" })
+
+  vim.keymap.set({ "n", "x", "o" }, "[a", function()
+    goto_textobject("@parameter.inner", false)
+  end, { desc = "Previous parameter" })
+
+  vim.keymap.set({ "n", "x", "o" }, "]c", function()
+    goto_textobject("@comment.outer", true)
+  end, { desc = "Next comment" })
+
+  vim.keymap.set({ "n", "x", "o" }, "[c", function()
+    goto_textobject("@comment.outer", false)
+  end, { desc = "Previous comment" })
+end
+
+-- Initialize vanilla treesitter
+setup_treesitter()
+setup_textobjects()
+
 return {
   {
     "retran/meow.yarn.nvim",
@@ -30,92 +172,6 @@ return {
             -- Your custom configuration goes here
         })
     end,
-},
-  {
-    "nvim-treesitter/nvim-treesitter",
-    version = false,
-    build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-    config = function()
-      require("nvim-treesitter").setup({})
-
-      vim.schedule(function()
-        require("nvim-treesitter").install(ts_parsers)
-      end)
-
-      vim.api.nvim_create_autocmd("FileType", {
-        callback = function(args)
-          pcall(vim.treesitter.start)
-          pcall(function()
-            vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-          end)
-        end,
-      })
-
-      require("nvim-treesitter-textobjects").setup({
-        select = {
-          lookahead = true,
-        },
-        move = {
-          set_jumps = true,
-        },
-      })
-
-      local select = require("nvim-treesitter-textobjects.select")
-      local move = require("nvim-treesitter-textobjects.move")
-      local swap = require("nvim-treesitter-textobjects.swap")
-
-      local function map_select(lhs, query)
-        vim.keymap.set({ "x", "o" }, lhs, function()
-          select.select_textobject(query, "textobjects")
-        end)
-      end
-
-      map_select("af", "@function.outer")
-      map_select("if", "@function.inner")
-      map_select("aa", "@parameter.outer")
-      map_select("ia", "@parameter.inner")
-      map_select("ac", "@comment.outer")
-      map_select("ic", "@comment.inner")
-
-      local function map_move(key, fn, query)
-        vim.keymap.set({ "n", "x", "o" }, key, function()
-          fn(query, "textobjects")
-        end)
-      end
-
-      map_move("]f", move.goto_next_start, "@function.outer")
-      map_move("]a", move.goto_next_start, "@parameter.inner")
-      map_move("]c", move.goto_next_start, "@comment.outer")
-      map_move("[f", move.goto_previous_start, "@function.outer")
-      map_move("[a", move.goto_previous_start, "@parameter.inner")
-      map_move("[c", move.goto_previous_start, "@comment.outer")
-
-      vim.keymap.set("n", "<leader>za", function()
-        swap.swap_next("@parameter.inner")
-      end)
-      vim.keymap.set("n", "<leader>zA", function()
-        swap.swap_previous("@parameter.inner")
-      end)
-
-      local ts_repeat_move = require("nvim-treesitter-textobjects.repeatable_move")
-      -- Vim-style ; / , (same direction / opposite) for textobject moves and f/F/t/T
-      vim.keymap.set({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move)
-      vim.keymap.set({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_opposite)
-      vim.keymap.set({ "n", "x", "o" }, "f", ts_repeat_move.builtin_f_expr, { expr = true })
-      vim.keymap.set({ "n", "x", "o" }, "F", ts_repeat_move.builtin_F_expr, { expr = true })
-      vim.keymap.set({ "n", "x", "o" }, "t", ts_repeat_move.builtin_t_expr, { expr = true })
-      vim.keymap.set({ "n", "x", "o" }, "T", ts_repeat_move.builtin_T_expr, { expr = true })
-    end,
-  },
-
-  {
-    "nvim-treesitter/playground",
-    cmd = { "TSPlaygroundToggle" },
-    dependencies = { "nvim-treesitter/nvim-treesitter" },
   },
 
   {
@@ -136,80 +192,15 @@ return {
   },
 
   {
-    "nvim-treesitter/nvim-treesitter-context",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-    event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("treesitter-context").setup({
-        ensure_installed = {
-          "clojure",
-          "lua",
-          "javascript",
-          "typescript",
-          "python",
-          "go",
-          "jsx",
-          "tsx",
-          "haskell",
-          "java",
-          "zig",
-          "rust",
-          "nix",
-        },
-        enable = false,
-        max_lines = 1,
-        line_numbers = true,
-        trim_scope = "outer",
-        mode = "cursor",
-        zindex = 20,
-      })
-    end,
-  },
-
-  {
     "windwp/nvim-ts-autotag",
     ft = { "html", "xml", "javascript", "javascriptreact", "typescriptreact" },
-    config = true,
-  },
-
-  {
-    "RRethy/nvim-treesitter-endwise",
-    event = "InsertEnter",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-  },
-  --[[
-  {
-    "ldelossa/litee.nvim",
-    event = "VeryLazy",
-    opts = {
-      notify = { enabled = false },
-      panel = { orientation = "bottom", panel_size = 10 },
-    },
-    config = function(_, opts)
-      require("litee.lib").setup(opts)
-    end,
-  },
-  {
-    "ldelossa/litee-calltree.nvim",
-    event = "VeryLazy",
-    dependencies = "ldelossa/litee.nvim",
-    opts = { on_open = "panel", map_resize_keys = false },
-    config = function(_, opts)
-      require("litee.calltree").setup(opts)
-    end,
-  },
-  ]]
-  --
-  {
-    "Wansmer/treesj",
-    cmd = { "TSJToggle", "TSJSplit", "TSJJoin" },
-    dependencies = "nvim-treesitter/nvim-treesitter",
     config = function()
-      require("treesj").setup({
-        use_default_keymaps = false,
+      require("nvim-ts-autotag").setup({
+        opts = {
+          enable_close = true,
+          enable_rename = true,
+          enable_close_on_slash = true,
+        },
       })
     end,
   },
