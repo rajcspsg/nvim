@@ -52,10 +52,14 @@ local function setup_textobjects()
   local function select_textobject(query_string)
     local bufnr = vim.api.nvim_get_current_buf()
     local node = vim.treesitter.get_node()
-    if not node then return end
+    if not node then
+      return
+    end
 
     local query = vim.treesitter.query.get(vim.bo.filetype, query_string)
-    if not query then return end
+    if not query then
+      return
+    end
 
     local start_row, start_col, end_row, end_col
     for _, match in query:iter_matches(node:tree():root(), bufnr) do
@@ -79,10 +83,14 @@ local function setup_textobjects()
   local function goto_textobject(query_string, forward)
     local bufnr = vim.api.nvim_get_current_buf()
     local node = vim.treesitter.get_node()
-    if not node then return end
+    if not node then
+      return
+    end
 
     local query = vim.treesitter.query.get(vim.bo.filetype, query_string)
-    if not query then return end
+    if not query then
+      return
+    end
 
     local cursor = vim.api.nvim_win_get_cursor(0)
     local cursor_row = cursor[1] - 1
@@ -164,15 +172,6 @@ setup_treesitter()
 setup_textobjects()
 
 return {
-  {
-    "retran/meow.yarn.nvim",
-    dependencies = { "MunifTanjim/nui.nvim" },
-    config = function()
-        require("meow.yarn").setup({
-            -- Your custom configuration goes here
-        })
-    end,
-  },
 
   {
     "bbjornstad/pretty-fold.nvim",
