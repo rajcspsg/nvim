@@ -112,8 +112,6 @@ return {
         },
       })
 
-      -- Setup blink.compat
-      require("blink.compat").setup({ impersonate_nvim_cmp = true })
     end,
   },
 }
