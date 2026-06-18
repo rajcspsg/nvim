@@ -44,8 +44,6 @@ local plugin_configs = {
 	"plugins.iron-config",
 	"plugins.repl-config",
 	"plugins.mason-lspconfig",
-	"plugins.code-runner-config",
-	"plugins.jaq-nvim-config",
 	"plugins.task-runner-config",
 	"plugins.bufterm-config",
 	"plugins.close-buffer-config",
