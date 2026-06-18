@@ -14,9 +14,6 @@ end, { desc = "Jump backward a snippet placement", noremap = true, silent = true
 -- Blink.cmp configuration
 return {
   {
-    build = function()
-      require("blink.cmp").build():wait(60000)
-    end,
     config = function()
       local blink_cmp = require("blink.cmp")
       blink_cmp.setup({
