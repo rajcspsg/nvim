@@ -45,7 +45,6 @@ declare -a plugins=(
     "antoinemadec/FixCursorHold.nvim"
     "aaronik/treewalker.nvim"
     "bassamsdata/namu.nvim"
-    "bbjornstad/pretty-fold.nvim"
     "boltlessengineer/bufterm.nvim"
     "chrisgrieser/nvim-chainsaw"
     "cordx56/rustowl"
