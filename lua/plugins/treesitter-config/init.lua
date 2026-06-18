@@ -174,14 +174,6 @@ setup_textobjects()
 return {
 
   {
-    "bbjornstad/pretty-fold.nvim",
-    event = "VeryLazy",
-    config = function()
-      require("pretty-fold").setup()
-    end,
-  },
-
-  {
     "anuvyklack/fold-preview.nvim",
     dependencies = { "anuvyklack/keymap-amend.nvim" },
     event = "VeryLazy",
