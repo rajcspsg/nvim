@@ -403,7 +403,6 @@ return {
 		end,
 	},
 	"erietz/vim-terminator",
-	{ "is0n/jaq-nvim" },
 	{ "CRAG666/code_runner.nvim", dependencies = "nvim-lua/plenary.nvim" },
 	{
 		"nvimtools/none-ls.nvim",
