@@ -43,7 +43,6 @@ local plugin_configs = {
 	"plugins.testing-config",
 	"plugins.iron-config",
 	"plugins.repl-config",
-	"plugins.mason-lspconfig",
 	"plugins.task-runner-config",
 	"plugins.bufterm-config",
 	"plugins.close-buffer-config",
