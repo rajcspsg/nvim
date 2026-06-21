@@ -40,7 +40,7 @@ return {
           require("neotest-java")({
             ignore_wrapper = true,
           }),
-          require("rustaceanvim.neotest")({}),
+          -- require("rustaceanvim.neotest")({}),
 
           require("neotest-playwright").adapter({}),
           require("neotest-go")({
