@@ -143,6 +143,7 @@ declare -a plugins=(
     "windwp/nvim-ts-autotag"
     "yioneko/nvim-vtsls"
     "zbirenbaum/neodim"
+    "antosha417/nvim-lsp-file-operations"
 )
 
 echo "Installing ${#plugins[@]} plugins to $PACK_DIR"
