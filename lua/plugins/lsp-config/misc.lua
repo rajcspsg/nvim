@@ -434,4 +434,18 @@ return {
     "nvimtools/none-ls.nvim",
     event = "VeryLazy",
   },
+   {
+    "antosha417/nvim-lsp-file-operations",
+     cmd = 'LFO', -- Uncomment this if you wish to lazy-load by using the `:LFO` user command
+
+    -- Uncomment whichever supported plugin(s) you use
+    -- dependencies = {
+    --   "nvim-tree/nvim-tree.lua",
+    --   "nvim-neo-tree/neo-tree.nvim",
+    --   "simonmclean/triptych.nvim"
+    -- },
+    config = function()
+      require("lsp-file-operations").setup()
+    end,
+  },
 }
