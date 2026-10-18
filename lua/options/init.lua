@@ -37,6 +37,7 @@ vim.o.autoindent = true
 vim.bo.autoindent = true
 vim.o.expandtab = true
 vim.bo.expandtab = true
+vim.o.winbar = ""
 vim.wo.foldmethod = "expr"
 vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
 --vim.opt_global.shortmess:remove("F"):append("c")
@@ -54,13 +55,15 @@ let g:vimspector_terminal_maxwidth = 70
 ]])
 
 -- yaml.nvim cmd
+--[[
 vim.api.nvim_create_autocmd({ "BufEnter", "CursorMoved" }, {
-	pattern = { "*.yaml" },
-	callback = function()
-		vim.opt_local.winbar = require("yaml_nvim").get_yaml_key_and_value()
-	end,
+  pattern = { "*.yaml" },
+  callback = function()
+    vim.opt_local.winbar = require("yaml_nvim").get_yaml_key_and_value()
+  end,
 })
-
+]]
+--
 -- parinfer options
 vim.cmd([[
 let g:parinfer_force_balance = v:true
@@ -71,16 +74,16 @@ let g:parinfer_comment_chars = ';;'
 local kopts = { noremap = true, silent = true }
 
 vim.api.nvim_set_keymap(
-	"n",
-	"n",
-	[[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
-	kopts
+  "n",
+  "n",
+  [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]],
+  kopts
 )
 vim.api.nvim_set_keymap(
-	"n",
-	"N",
-	[[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
-	kopts
+  "n",
+  "N",
+  [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]],
+  kopts
 )
 vim.api.nvim_set_keymap("n", "*", [[*<Cmd>lua require('hlslens').start()<CR>]], kopts)
 vim.api.nvim_set_keymap("n", "#", [[#<Cmd>lua require('hlslens').start()<CR>]], kopts)
