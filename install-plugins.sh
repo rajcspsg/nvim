@@ -19,6 +19,7 @@ echo ""
 
 declare -a plugins=(
     "3rd/image.nvim"
+    "stevearc/aerial.nvim"
     "AstroNvim/astrotheme"
     "CRAG666/code_runner.nvim"
     "HiPhish/rainbow-delimiters.nvim"
