@@ -13,99 +13,64 @@ if ! command -v nvim > /dev/null 2>&1; then
   exit 1
 fi
 
-# Check if Mason is installed
-if [ ! -d "$HOME/.local/share/nvim/mason" ]; then
-  echo "⚠️  Mason not found. Installing plugins first..."
+# Check that mason.nvim itself is installed (the plugin, not just its data dir)
+MASON_PLUGIN="$HOME/.local/share/nvim/site/pack/vendor/start/mason.nvim"
+if [ ! -d "$MASON_PLUGIN" ]; then
+  echo "⚠️  mason.nvim plugin not found at $MASON_PLUGIN"
   echo "   Run: ~/.config/nvim/install-plugins.sh"
   exit 1
 fi
 
-echo "Installing Mason packages in the background..."
-echo "This will take 3-5 minutes depending on your connection."
-echo ""
+# Install a space-separated list of Mason packages ($MASON_PKGS) in one headless nvim.
+# ":MasonInstall" is async, so "-c MasonInstall -c qall" would quit before anything
+# finishes (and 2>/dev/null used to hide the errors). Here we wait for completion.
+mason_install() {
+  local lua_file
+  lua_file="$(mktemp -t mason-install).lua"
+  cat > "$lua_file" <<'EOF'
+local names = vim.split(vim.env.MASON_PKGS or "", " ", { trimempty = true })
+require("mason").setup()
+local reg = require("mason-registry")
+local pending = #names
+reg.refresh(function()
+  for _, n in ipairs(names) do
+    local ok, pkg = pcall(reg.get_package, n)
+    if not ok then
+      print("  x " .. n .. ": not found in registry")
+      pending = pending - 1
+    elseif pkg:is_installed() then
+      print("  = " .. n .. " (already installed)")
+      pending = pending - 1
+    else
+      print("  + installing " .. n)
+      pkg:once("closed", function()
+        pending = pending - 1
+        print((pkg:is_installed() and "  ok " or "  FAILED ") .. n)
+      end)
+      pkg:install()
+    end
+  end
+end)
+vim.wait(900000, function() return pending <= 0 end, 200)
+EOF
+  nvim --headless "+luafile $lua_file" +qall 2>&1
+  rm -f "$lua_file"
+  echo ""
+}
 
-# LSP Servers
 echo "📦 Installing LSP Servers..."
-declare -a lsp_servers=(
-  "lua-language-server"
-  "typescript-language-server"
-  "vtsls"
-  "gopls"
-  "jdtls"
-  "yaml-language-server"
-  "clojure-lsp"
-  "dhall-lsp"
-  "gradle-language-server"
-  "zls"
-  "ruff"
-)
+MASON_PKGS="lua-language-server typescript-language-server vtsls gopls jdtls yaml-language-server clojure-lsp dhall-lsp gradle-language-server zls ruff" mason_install
 
-for server in "${lsp_servers[@]}"; do
-  echo "  - $server"
-done
-
-nvim --headless -c "MasonInstall ${lsp_servers[*]}" -c "qall" 2>/dev/null &
-mason_lsp_pid=$!
-
-# DAP Adapters
-echo ""
 echo "🐛 Installing Debug Adapters..."
-declare -a dap_adapters=(
-  "java-debug-adapter"
-  "java-test"
-  "debugpy"
-  "js-debug-adapter"
-  "codelldb"
-  "delve"
-)
+MASON_PKGS="java-debug-adapter java-test debugpy js-debug-adapter codelldb delve" mason_install
 
-for adapter in "${dap_adapters[@]}"; do
-  echo "  - $adapter"
-done
-
-nvim --headless -c "MasonInstall ${dap_adapters[*]}" -c "qall" 2>/dev/null &
-mason_dap_pid=$!
-
-# Formatters
-echo ""
 echo "✨ Installing Formatters..."
-declare -a formatters=(
-  "prettier"
-  "stylua"
-  "shfmt"
-)
-
-for formatter in "${formatters[@]}"; do
-  echo "  - $formatter"
-done
-
-nvim --headless -c "MasonInstall ${formatters[*]}" -c "qall" 2>/dev/null &
-mason_fmt_pid=$!
-
-echo ""
-echo "⏳ Waiting for installations to complete..."
-echo "   (This runs in the background, you can check status with :Mason in Neovim)"
-echo ""
-
-# Wait for all background processes
-wait $mason_lsp_pid 2>/dev/null
-wait $mason_dap_pid 2>/dev/null
-wait $mason_fmt_pid 2>/dev/null
+MASON_PKGS="prettier stylua shfmt" mason_install
 
 echo "================================================"
 echo "  Installation Complete!"
 echo "================================================"
 echo ""
-echo "✅ All Mason packages have been queued for installation"
-echo ""
-echo "Next steps:"
-echo "  1. Start Neovim: nvim"
-echo "  2. Check installation status: :Mason"
-echo "  3. If any packages failed, install manually:"
-echo "     :MasonInstall <package-name>"
-echo ""
-echo "Common packages installed:"
-echo "  • LSP Servers: ${#lsp_servers[@]} servers"
-echo "  • DAP Adapters: ${#dap_adapters[@]} adapters"
-echo "  • Formatters: ${#formatters[@]} formatters"
+echo "Review the ok / FAILED lines above. To retry a failed package:"
+echo "  nvim, then :MasonInstall <package-name>   (check status with :Mason)"
 echo ""
