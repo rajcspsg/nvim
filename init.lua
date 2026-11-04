@@ -29,6 +29,7 @@ end
 -- Load plugin configurations
 -- Note: All plugins in ~/.local/share/nvim/site/pack/vendor/start/ are auto-loaded
 local plugin_configs = {
+	"plugins.mason-config",
 	"plugins.completion-config",
 	"plugins.lsp-config",
 	"plugins.treesitter-config",
